@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aerodynamic/Archive</title>
+<style>
+  :root{
+    --bg:#050608;
+    --bg-2:#0a0c0f;
+    --panel:#0c0f13;
+    --line:rgba(255,255,255,0.06);
+    --line-2:rgba(255,255,255,0.09);
+    --text:#c4cdd4;
+    --text-dim:rgba(196,205,212,0.5);
+    --text-dimmer:rgba(196,205,212,0.35);
+    --blue:#3b82f6;
+    --blue-hover:#60a5fa;
+    --amber:#fbbf24;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'Consolas', 'SFMono-Regular', Menlo, monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--font);}
+  body{min-height:100vh;font-weight:300;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:var(--font);cursor:pointer;}
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(5,6,8,0.95);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .header-inner{
+    max-width:1600px;margin:0 auto;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 40px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;background:none;border:none;padding:0;}
+  .brand svg{width:16px;height:16px;color:var(--blue);flex-shrink:0;}
+  .brand-text{
+    border:1px solid var(--line-2);
+    padding:5px 10px;
+    font-size:11px;font-weight:500;
+    text-transform:uppercase;letter-spacing:.2em;
+    color:var(--text);
+  }
+  .brand-text .slash{color:var(--blue);}
+  nav.mainnav{display:flex;gap:32px;align-items:center;}
+  .navlink{
+    background:none;border:none;
+    font-size:11px;text-transform:uppercase;letter-spacing:.2em;
+    color:var(--text-dimmer);
+    padding:0;transition:color .15s;
+  }
+  .navlink:hover{color:rgba(196,205,212,0.8);}
+  .navlink.active{color:var(--blue);}
+  .submit-btn{
+    display:flex;align-items:center;gap:8px;
+    border:1px solid rgba(59,130,246,0.5);
+    background:transparent;color:var(--blue);
+    padding:8px 16px;font-size:11px;text-transform:uppercase;letter-spacing:.2em;
+    transition:background .15s;
+  }
+  .submit-btn:hover{background:rgba(59,130,246,0.1);}
+  .submit-btn svg{width:14px;height:14px;}
+
+  /* ---------- account ---------- */
+  .account-wrap{position:relative;}
+  .account-btn{display:flex;align-items:center;gap:9px;background:transparent;color:var(--text);border:1px solid var(--line-2);padding:7px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.15em;transition:border-color .15s,background .15s;}
+  .account-btn:hover{border-color:rgba(59,130,246,.55);background:rgba(59,130,246,.06);}
+  .account-chevron{width:12px;height:12px;color:var(--text-dimmer);}
+  .account-menu{position:absolute;right:0;top:calc(100% + 10px);width:230px;padding:12px;background:#0a0c0f;border:1px solid var(--line-2);box-shadow:0 18px 45px rgba(0,0,0,.45);z-index:100;}
+  .account-menu.hidden{display:none;}
+  .account-info{padding:10px 10px 14px;border-bottom:1px solid var(--line);}
+  .account-info strong{display:block;font-size:13px;font-weight:400;color:var(--text);}
+  .account-info span{display:block;margin-top:5px;font-size:11px;color:var(--text-dimmer);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .account-menu-btn{width:100%;margin-top:10px;border:1px solid var(--line-2);background:transparent;color:var(--text-dim);padding:10px 12px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.2em;}
+  .account-menu-btn:hover{border-color:rgba(59,130,246,.45);color:var(--blue);}
+  .auth-status{position:fixed;right:24px;bottom:24px;z-index:200;padding:12px 16px;background:#0a0c0f;border:1px solid var(--line-2);font-size:12px;color:var(--text);box-shadow:0 15px 40px rgba(0,0,0,.4);}
+  .auth-status.error{color:var(--amber);}
+  @media (max-width:900px){.account-menu{right:-10px;}}
+
+  /* ---------- page header (no hero image) ---------- */
+  .pagehead{
+    border-bottom:1px solid var(--line);
+    padding:64px 40px;
+  }
+  .pagehead-inner{max-width:1600px;margin:0 auto;}
+  .eyebrow{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.4em;color:var(--blue);}
+  .pagehead h1{
+    margin:20px 0 0;
+    max-width:640px;
+    font-size:clamp(28px,4vw,48px);
+    font-weight:300;line-height:1.1;
+    color:var(--text);
+  }
+  .pagehead p{
+    margin:16px 0 0;
+    max-width:440px;
+    font-size:15px;line-height:1.6;
+    color:var(--text-dim);
+  }
+  .pagehead-actions{display:flex;gap:16px;flex-wrap:wrap;margin-top:32px;}
+  .btn-outline-blue{
+    border:1px solid rgba(59,130,246,0.5);background:transparent;color:var(--blue);
+    padding:12px 24px;font-size:11px;text-transform:uppercase;letter-spacing:.2em;
+    transition:background .15s;
+  }
+  .btn-outline-blue:hover{background:rgba(59,130,246,0.1);}
+  .btn-outline-dim{
+    border:1px solid var(--line-2);background:transparent;color:rgba(196,205,212,0.7);
+    padding:12px 24px;font-size:11px;text-transform:uppercase;letter-spacing:.2em;
+    transition:border-color .15s;
+  }
+  .btn-outline-dim:hover{border-color:rgba(255,255,255,0.25);}
+  .btn-fill-blue{
+    border:none;background:var(--blue);color:var(--bg);
+    padding:14px 28px;font-size:11px;text-transform:uppercase;letter-spacing:.2em;
+    transition:background .15s;
+  }
+  .btn-fill-blue:hover{background:var(--blue-hover);}
+
+  /* ---------- section heading ---------- */
+  .section-heading{max-width:600px;margin-bottom:52px;}
+  .section-heading h2{
+    margin:14px 0 0;font-size:30px;font-weight:300;line-height:1.15;color:var(--text);
+  }
+  .section-heading p{margin:14px 0 0;font-size:15px;line-height:1.6;color:var(--text-dim);}
+
+  /* ---------- gallery section ---------- */
+  .section{max-width:1600px;margin:0 auto;padding:80px 40px;}
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:32px 28px;
+  }
+  .empty-line{font-size:15px;color:var(--text-dim);}
+  .empty-line button{background:none;border:none;color:var(--blue);text-decoration:underline;text-underline-offset:4px;padding:0;font-size:15px;}
+  .enter-archive{
+    margin-top:44px;padding-top:28px;border-top:1px solid var(--line);
+    display:flex;
+  }
+  .enter-archive button{
+    display:flex;align-items:center;gap:10px;background:none;border:none;
+    font-size:11px;text-transform:uppercase;letter-spacing:.25em;color:var(--blue);
+  }
+  .enter-archive svg{width:13px;height:13px;transition:transform .2s;}
+  .enter-archive button:hover svg{transform:translateX(3px);}
+
+  /* ---------- photo card ---------- */
+  .card{background:none;border:none;padding:0;text-align:left;width:100%;color:inherit;}
+  .card-img-wrap{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;background:#000;}
+  .card-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease;}
+  .card:hover .card-img-wrap img{transform:scale(1.04);}
+  .card-reg-tag{
+    position:absolute;top:12px;left:12px;
+    border:1px solid var(--line-2);background:rgba(0,0,0,0.6);
+    padding:4px 10px;font-family:var(--font-mono);
+    font-size:10px;text-transform:uppercase;letter-spacing:.2em;color:var(--text);
+    backdrop-filter:blur(2px);
+  }
+  .card-body{margin-top:16px;display:flex;justify-content:space-between;gap:16px;}
+  .card-title{font-size:16px;font-weight:300;color:var(--text);line-height:1.3;}
+  .card-sub{margin-top:5px;font-size:13px;color:var(--text-dimmer);}
+  .card-arrow{width:14px;height:14px;color:var(--blue);opacity:0;transition:opacity .2s;flex-shrink:0;margin-top:4px;}
+  .card:hover .card-arrow{opacity:1;}
+
+  /* ---------- pillars ---------- */
+  .pillars-section{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(255,255,255,0.015);}
+  .pillars-grid{
+    max-width:1600px;margin:0 auto;padding:72px 40px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  }
+  .pillar{border-left:1px solid rgba(59,130,246,0.3);padding-left:24px;margin-right:36px;}
+  .pillar svg{width:18px;height:18px;color:var(--blue);}
+  .pillar h3{margin:18px 0 0;font-size:19px;font-weight:300;color:var(--text);}
+  .pillar p{margin:10px 0 0;font-size:14px;line-height:1.6;color:var(--text-dim);}
+
+  /* ---------- CTA ---------- */
+  .cta-box{
+    display:flex;flex-wrap:wrap;gap:28px;
+    align-items:center;justify-content:space-between;
+    border:1px solid var(--line);padding:44px;
+  }
+  .cta-box h2{margin:0;max-width:520px;font-size:24px;font-weight:300;line-height:1.3;color:var(--text);}
+  .cta-box p{margin:14px 0 0;max-width:480px;font-size:14px;line-height:1.6;color:var(--text-dim);}
+
+  footer{border-top:1px solid var(--line);padding:36px 40px;}
+  .footer-inner{
+    max-width:1600px;margin:0 auto;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    font-size:11px;text-transform:uppercase;letter-spacing:.2em;
+  }
+  .footer-inner span:first-child{color:var(--text-dimmer);}
+  .footer-inner span:last-child{color:rgba(196,205,212,0.25);}
+
+  /* ---------- filter bar (browse) ---------- */
+  .filterbar{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:24px 0;}
+  .filter-search{
+    width:100%;background:transparent;border:none;border-bottom:1px solid var(--line-2);
+    padding:0 0 12px;font-size:16px;color:var(--text);outline:none;
+  }
+  .filter-search::placeholder{color:rgba(196,205,212,0.3);}
+  .filter-search:focus{border-color:var(--blue);}
+  .filter-groups{display:flex;gap:24px;flex-wrap:wrap;margin-top:24px;}
+  .filter-group label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.3em;color:var(--text-dimmer);}
+  .filter-group select{
+    margin-top:8px;background:var(--bg);border:1px solid var(--line-2);color:var(--text);
+    padding:8px 12px;font-size:13px;
+  }
+  .filter-count{margin:40px 0 40px;font-size:11px;text-transform:uppercase;letter-spacing:.3em;color:var(--text-dimmer);}
+
+  /* ---------- upload page ---------- */
+  .upload-layout{display:grid;grid-template-columns:240px 1fr;gap:56px;}
+
+  .dropzone{
+    position:relative;min-height:260px;
+    border:1.5px dashed var(--line-2);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;overflow:hidden;transition:border-color .2s;
+  }
+  .dropzone:hover{border-color:var(--blue);}
+  .dropzone.has-img{border-style:solid;}
+  .dropzone img{width:100%;max-height:320px;object-fit:cover;display:block;}
+  .dz-empty{display:flex;flex-direction:column;align-items:center;gap:14px;padding:56px 24px;text-align:center;}
+  .dz-empty svg{width:26px;height:26px;color:var(--blue);}
+  .dz-empty p{margin:0;font-size:15px;color:rgba(196,205,212,0.7);}
+  .dz-empty .hint{font-size:11px;text-transform:uppercase;letter-spacing:.25em;color:rgba(196,205,212,0.3);}
+  .field-err{margin-top:14px;font-size:13px;color:var(--amber);}
+
+  .field-grid{margin-top:44px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px 36px;}
+  .field label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.3em;color:var(--text-dimmer);}
+  .field input, .field textarea, .field select{
+    margin-top:10px;width:100%;background:transparent;border:none;border-bottom:1px solid var(--line-2);
+    padding:10px 0;font-size:15px;color:var(--text);outline:none;transition:border-color .2s;
+  }
+  .field select{
+    -webkit-appearance:none;appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right center;background-size:16px;
+  }
+  .field select option{background:#0a0c0f;color:var(--text);}
+  .field select:invalid, .field select.placeholder{color:rgba(196,205,212,0.4);}
+  .field input::placeholder, .field textarea::placeholder{color:rgba(196,205,212,0.25);}
+  .field input:focus, .field textarea:focus{border-color:var(--blue);}
+  .field-notes{margin-top:36px;}
+  .field-notes textarea{border:1px solid var(--line-2);padding:14px;resize:vertical;min-height:80px;line-height:1.6;}
+
+  .upload-footer{margin-top:40px;border-top:1px solid var(--line);padding-top:32px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+  .upload-footer .req-hint{font-size:13px;color:rgba(196,205,212,0.45);}
+  .clear-btn{
+    display:flex;align-items:center;gap:12px;
+    background:var(--blue);color:var(--bg);border:none;
+    padding:14px 32px;font-size:11px;text-transform:uppercase;letter-spacing:.25em;
+    transition:background .2s,opacity .2s;
+  }
+  .clear-btn:hover{background:var(--blue-hover);}
+  .clear-btn:disabled{background:rgba(255,255,255,0.08);color:rgba(196,205,212,0.35);cursor:not-allowed;}
+  .spin{width:14px;height:14px;border:2px solid rgba(0,0,0,0.25);border-top-color:currentColor;border-radius:50%;animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* ---------- detail page ---------- */
+  .detail-hero{width:100%;height:56vh;min-height:340px;background:#000;overflow:hidden;}
+  .detail-hero img{width:100%;height:100%;object-fit:cover;display:block;}
+  .detail-body{max-width:1600px;margin:0 auto;padding:56px 40px;}
+  .back-link{display:flex;align-items:center;gap:10px;background:none;border:none;font-size:11px;text-transform:uppercase;letter-spacing:.25em;color:rgba(196,205,212,0.5);}
+  .back-link:hover{color:var(--blue);}
+  .back-link svg{width:13px;height:13px;}
+  .detail-title{margin:36px 0 0;max-width:760px;font-size:clamp(26px,4vw,44px);font-weight:300;line-height:1.15;color:var(--text);}
+  .detail-notes{margin:20px 0 0;max-width:640px;font-size:16px;line-height:1.6;color:rgba(196,205,212,0.55);}
+  .fdr-label{margin-top:60px;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.4em;color:var(--blue);}
+  .fdr-grid{margin-top:28px;display:grid;grid-template-columns:repeat(4,1fr);gap:28px 40px;}
+  .fdr-field .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.3em;color:var(--text-dimmer);}
+  .fdr-field .val{margin-top:8px;font-size:16px;color:var(--text);}
+  .fdr-field .val.highlight{color:var(--blue);}
+  .hw-label{margin-top:60px;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.4em;color:var(--amber);}
+  .hw-badges{margin-top:28px;display:flex;flex-wrap:wrap;gap:12px;}
+  .hw-badge{border:1px solid var(--line-2);padding:10px 16px;font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:rgba(196,205,212,0.7);}
+  .hw-badge .k{color:rgba(196,205,212,0.4);}
+
+  .hidden{display:none !important;}
+
+  @media (max-width:900px){
+    nav.mainnav{display:none;}
+    .header-inner{padding:14px 20px;}
+    .pagehead{padding:40px 20px;}
+    .section{padding:56px 20px;}
+    .pillars-grid{grid-template-columns:1fr;padding:48px 20px;}
+    .pillar{margin-right:0;margin-bottom:32px;}
+    .upload-layout{grid-template-columns:1fr;}
+    .field-grid{grid-template-columns:1fr 1fr;}
+    .fdr-grid{grid-template-columns:1fr 1fr;}
+    .cta-box{padding:28px;}
+  }
+  @media (max-width:560px){
+    .field-grid{grid-template-columns:1fr;}
+    .fdr-grid{grid-template-columns:1fr;}
+    .gallery-grid{grid-template-columns:1fr;}
+  }
+
+  ::selection{background:var(--blue);color:#fff;}
+  ::-webkit-scrollbar{width:10px;}
+  ::-webkit-scrollbar-track{background:var(--bg);}
+  ::-webkit-scrollbar-thumb{background:var(--panel);border:2px solid var(--bg);border-radius:6px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <button class="brand" id="brandBtn">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+      <span class="brand-text">Aerodynamic<span class="slash">/</span>Archive</span>
+    </button>
+    <nav class="mainnav">
+      <button class="navlink active" data-view="browse">Search</button>
+    </nav>
+    <div class="account-wrap">
+      <button class="account-btn" id="accountBtn" type="button">
+        <span id="accountLabel">Sign In</span>
+        <svg class="account-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="account-menu hidden" id="accountMenu">
+        <div class="account-info"><strong id="accountName">Not signed in</strong><span id="accountEmail">Sign in with Google to create your account.</span></div>
+        <button class="account-menu-btn hidden" id="signOutBtn" type="button">Sign Out</button>
+      </div>
+    </div>
+    <button class="submit-btn" data-view="upload">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 16.5V19a2 2 0 002 2h12a2 2 0 002-2v-2.5M7 9l5-5 5 5M12 4v13"/></svg>
+      Upload
+    </button>
+  </div>
+</header>
+
+<!-- ============ HOME VIEW ============ -->
+<div id="view-home">
+  <section class="section">
+    <div class="section-heading">
+      <div class="eyebrow">Latest Arrivals</div>
+      <h2>Fresh from the fence line.</h2>
+      <p>Newly logged submissions from the spotting community, ordered by arrival.</p>
+    </div>
+    <div class="gallery-grid" id="homeGallery"></div>
+    <p class="empty-line hidden" id="homeEmpty">The hangar is empty. <button data-view="upload">Upload the first frame</button>.</p>
+    <div class="enter-archive hidden" id="enterArchiveWrap">
+      <button data-view="browse">
+        Enter the full archive
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <section class="pillars-section">
+    <div class="pillars-grid">
+      <div class="pillar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v6c0 1.66 4.03 3 9 3s9-1.34 9-3V5M3 11v6c0 1.66 4.03 3 9 3s9-1.34 9-3v-6"/></svg>
+        <h3>Full airframe logging</h3>
+        <p>Registration, MSN, operator and aircraft type recorded on every submission.</p>
+      </div>
+      <div class="pillar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        <h3>Hardware transparency</h3>
+        <p>Camera body, lens, aperture, shutter and ISO shown as a technical badge log.</p>
+      </div>
+      <div class="pillar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></svg>
+        <h3>Multi-parameter search</h3>
+        <p>Filter the archive by operator, airframe or airport in a single sweep.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="cta-box">
+      <div>
+        <h2>Cleared for takeoff — submit your frames to the archive.</h2>
+        <p>Complete the mission checklist and your photograph joins the permanent registry.</p>
+      </div>
+      <button class="btn-fill-blue" data-view="upload">Upload Hangar</button>
+    </div>
+  </section>
+</div>
+
+<!-- ============ BROWSE VIEW ============ -->
+<div id="view-browse" class="hidden">
+  <section class="section" style="padding-bottom:0;">
+    <div class="eyebrow">Radar Search</div>
+    <h2 style="margin:14px 0 0;font-size:30px;font-weight:300;color:var(--text);">Sweep the archive.</h2>
+    <p style="margin:14px 0 0;font-size:15px;color:var(--text-dim);max-width:600px;">Filter by operator, airframe or airport — or search any registration directly.</p>
+
+    <div class="filterbar">
+      <input type="text" class="filter-search" id="browseSearch" placeholder="Search registration, operator, type, ICAO code…">
+      <div class="filter-groups">
+        <div class="filter-group">
+          <label>Operator</label>
+          <select id="filterAirline"></select>
+        </div>
+        <div class="filter-group">
+          <label>Airframe</label>
+          <select id="filterType"></select>
+        </div>
+      </div>
+    </div>
+    <div class="filter-count" id="browseCount">0 contacts on radar</div>
+  </section>
+  <section class="section" style="padding-top:0;">
+    <div class="gallery-grid" id="browseGallery"></div>
+    <p class="empty-line hidden" id="browseEmpty">No contacts match this sweep. Widen your filters.</p>
+  </section>
+</div>
+
+<!-- ============ UPLOAD VIEW ============ -->
+<div id="view-upload" class="hidden">
+  <section class="section">
+    <div style="border-left:1px solid rgba(59,130,246,0.4);padding-left:24px;">
+      <div class="eyebrow">Upload Hangar</div>
+      <h1 style="margin:20px 0 0;font-size:clamp(28px,4vw,44px);font-weight:300;color:var(--text);">Clear your frame for takeoff.</h1>
+    </div>
+
+    <div style="margin-top:56px;max-width:920px;">
+        <div class="dropzone" id="dropzone">
+          <div class="dz-empty" id="dzEmpty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 16.5V19a2 2 0 002 2h12a2 2 0 002-2v-2.5M7 9l5-5 5 5M12 4v13"/></svg>
+            <p>Drop or select your photograph</p>
+            <div class="hint">JPEG or PNG</div>
+          </div>
+          <img id="dzPreview" class="hidden" alt="preview">
+          <input type="file" id="fileInput" accept="image/*" style="display:none;">
+        </div>
+        <div class="field-err hidden" id="fileErr">Please choose an image file.</div>
+
+        <div class="field-grid" id="fieldGrid"></div>
+
+        <div class="field field-notes">
+          <label>Notes</label>
+          <textarea id="fNotes" placeholder="Conditions, story behind the shot…"></textarea>
+        </div>
+
+        <div class="upload-footer">
+          <button class="clear-btn" id="submitUploadBtn">Cleared for Takeoff</button>
+          <span class="req-hint" id="reqHint">A photograph and aircraft type are required.</span>
+        </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ DETAIL VIEW ============ -->
+<div id="view-detail" class="hidden">
+  <div class="detail-hero"><img id="detailImg" src="" alt=""></div>
+  <div class="detail-body">
+    <button class="back-link" id="backToBrowse">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      Radar Search
+    </button>
+    <h1 class="detail-title" id="detailTitle"></h1>
+    <p class="detail-notes hidden" id="detailNotes"></p>
+
+    <div class="fdr-label">Flight Data Recorder</div>
+    <div class="fdr-grid" id="fdrGrid"></div>
+
+    <div class="hw-label hidden" id="hwLabel">Hardware Log</div>
+    <div class="hw-badges" id="hwBadges"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <span>Aerodynamic/Archive · Community Spotting Log</span>
+    <span id="footerCount">0 frames logged</span>
+  </div>
+</footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+  const firebaseConfig = {
+  apiKey: "AIzaSyCetqc0Yf9HmT_mrnZi34QqX-pIkQ23lUc",
+  authDomain: "aerodynamic-archive.firebaseapp.com",
+  projectId: "aerodynamic-archive",
+  storageBucket: "aerodynamic-archive.firebasestorage.app",
+  messagingSenderId: "497229791567",
+  appId: "1:497229791567:web:ba017dc034996a1feb853a",
+  measurementId: "G-9D83VPYR6Z"
+};
+
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  window.firebaseAuthAPI = {
+    signIn: async () => (await signInWithPopup(auth, provider)).user,
+    signOut: () => signOut(auth),
+    onChange: callback => onAuthStateChanged(auth, callback)
+  };
+</script>
+
+<script>
+(function(){
+  const STORAGE_LIST_KEY = 'aa:ids';
+  let photos = [];
+  let currentView = 'home';
+  let activeId = null;
+  let pendingImage = null;
+  let currentUser = null;
+
+  // ---------------- authentication ----------------
+  const accountBtn = document.getElementById('accountBtn');
+  const accountMenu = document.getElementById('accountMenu');
+  const accountLabel = document.getElementById('accountLabel');
+  const accountName = document.getElementById('accountName');
+  const accountEmail = document.getElementById('accountEmail');
+  const signOutBtn = document.getElementById('signOutBtn');
+
+  function showAuthStatus(message, isError=false){
+    const old=document.querySelector('.auth-status'); if(old) old.remove();
+    const el=document.createElement('div'); el.className='auth-status'+(isError?' error':''); el.textContent=message;
+    document.body.appendChild(el); setTimeout(()=>el.remove(),4500);
+  }
+  function updateAccountUI(user){
+    currentUser=user||null;
+    if(user){
+      const name=user.displayName || user.email?.split('@')[0] || 'Account';
+      accountLabel.textContent=name; accountName.textContent=name; accountEmail.textContent=user.email||'';
+      signOutBtn.classList.remove('hidden');
+    }else{
+      accountLabel.textContent='Sign In'; accountName.textContent='Not signed in'; accountEmail.textContent='Sign in with Google to create your account.';
+      signOutBtn.classList.add('hidden');
+    }
+  }
+  accountBtn.addEventListener('click',async()=>{
+    if(currentUser){accountMenu.classList.toggle('hidden');return;}
+    try{accountBtn.disabled=true;accountLabel.textContent='Signing in…';await window.firebaseAuthAPI.signIn();showAuthStatus('Signed in successfully.');}
+    catch(e){console.error(e);updateAccountUI(null);if(e.code!=='auth/popup-closed-by-user')showAuthStatus('Google sign-in failed. Please try again.',true);}
+    finally{accountBtn.disabled=false;}
+  });
+  signOutBtn.addEventListener('click',async()=>{try{await window.firebaseAuthAPI.signOut();accountMenu.classList.add('hidden');showAuthStatus('Signed out.');}catch(e){showAuthStatus('Could not sign out. Please try again.',true);}});
+  document.addEventListener('click',e=>{if(!e.target.closest('.account-wrap'))accountMenu.classList.add('hidden');});
+  window.firebaseAuthAPI.onChange(updateAccountUI);
+
+
+  const AIRCRAFT_TYPES = {
+    'General Aviation': [
+      'Cessna 150','Cessna 152','Cessna 172 Skyhawk','Cessna 182 Skylane','Cessna 206 Stationair','Cessna 210 Centurion',
+      'Cirrus SR20','Cirrus SR22','Piper PA-28 Cherokee','Piper PA-32 Saratoga','Piper Seneca','Piper Malibu',
+      'Beechcraft Bonanza','Beechcraft Baron','Beechcraft Duchess','Diamond DA20','Diamond DA40','Diamond DA42',
+      'Mooney M20','Cessna Caravan','Pilatus PC-12','Van’s RV-10','American Champion Citabria','Aeronca Champ',
+    ],
+    'Commercial (Narrowbody)': [
+      'Airbus A220-100','Airbus A220-300','Airbus A318','Airbus A319','Airbus A320','Airbus A321','Airbus A321neo',
+      'Boeing 717','Boeing 727','Boeing 737-600','Boeing 737-700','Boeing 737-800','Boeing 737-900',
+      'Boeing 737 MAX 7','Boeing 737 MAX 8','Boeing 737 MAX 9','Boeing 757-200','Boeing 757-300',
+      'McDonnell Douglas MD-80','McDonnell Douglas MD-90','Tupolev Tu-154',
+    ],
+    'Commercial (Widebody)': [
+      'Airbus A300','Airbus A310','Airbus A330-200','Airbus A330-300','Airbus A330neo','Airbus A340-300','Airbus A340-600',
+      'Airbus A350-900','Airbus A350-1000','Airbus A380','Boeing 767-200','Boeing 767-300','Boeing 767-400',
+      'Boeing 777-200','Boeing 777-300','Boeing 777-300ER','Boeing 777X','Boeing 787-8 Dreamliner',
+      'Boeing 787-9 Dreamliner','Boeing 787-10 Dreamliner','Boeing 747-400','Boeing 747-8 Intercontinental','Ilyushin Il-96',
+    ],
+    'Regional': [
+      'Embraer E170','Embraer E175','Embraer E190','Embraer E195','Embraer E2 Family',
+      'Bombardier CRJ200','Bombardier CRJ700','Bombardier CRJ900','Bombardier CRJ1000','Bombardier Dash 8 Q400',
+      'ATR 42','ATR 72','De Havilland Canada DHC-6 Twin Otter','Saab 340','Fokker 50','Xian MA60',
+    ],
+    'Business Jet': [
+      'Cessna Citation CJ3','Cessna Citation Latitude','Cessna Citation X','Cessna Citation Longitude',
+      'Bombardier Challenger 350','Bombardier Challenger 650','Bombardier Global 6000','Bombardier Global 7500',
+      'Gulfstream G280','Gulfstream G550','Gulfstream G650','Gulfstream G700','Embraer Phenom 300','Embraer Praetor 600',
+      'Dassault Falcon 900','Dassault Falcon 2000','Dassault Falcon 7X','Dassault Falcon 8X','Learjet 75',
+    ],
+    'Cargo / Freighter': [
+      'Boeing 747-400F','Boeing 747-8F','Boeing 767F','Boeing 777F','McDonnell Douglas MD-11F',
+      'Airbus A300F','Airbus A330F','Antonov An-12','Antonov An-124','Antonov An-225 (retired)',
+      'Ilyushin Il-76','ATR 72F','Cessna 208B Cargo Caravan',
+    ],
+    'Military': [
+      'F-15 Eagle','F-16 Fighting Falcon','F/A-18 Hornet','F-22 Raptor','F-35 Lightning II','A-10 Thunderbolt II',
+      'C-130 Hercules','C-17 Globemaster III','KC-135 Stratotanker','KC-46 Pegasus','Boeing E-3 Sentry (AWACS)',
+      'Eurofighter Typhoon','Dassault Rafale','Panavia Tornado','Sukhoi Su-27','MiG-29','B-52 Stratofortress','B-2 Spirit',
+    ],
+    'Helicopter': [
+      'Robinson R22','Robinson R44','Robinson R66','Bell 206 JetRanger','Bell 407','Bell 429',
+      'Airbus H125','Airbus H145','Airbus H160','Sikorsky S-76','Sikorsky S-92','MD 500','UH-60 Black Hawk','AH-64 Apache',
+    ],
+  };
+
+  const OPERATORS = [
+    'Private / Unmarked','Other / Charter',
+    // North America
+    'American Airlines','Delta Air Lines','United Airlines','Southwest Airlines','Alaska Airlines','JetBlue',
+    'Spirit Airlines','Frontier Airlines','Hawaiian Airlines','Allegiant Air','Air Canada','WestJet','Porter Airlines',
+    'Aeromexico','Volaris','Copa Airlines','Avianca',
+    // Europe
+    'Lufthansa','British Airways','Air France','KLM','Iberia','Swiss Intl Air Lines','Austrian Airlines','TAP Air Portugal',
+    'Ryanair','easyJet','Wizz Air','Vueling','Norwegian Air Shuttle','SAS Scandinavian Airlines','Finnair','Aer Lingus',
+    'LOT Polish Airlines','Turkish Airlines','Aegean Airlines','Icelandair',
+    // Middle East
+    'Emirates','Qatar Airways','Etihad Airways','Saudia','Gulf Air','Royal Jordanian','El Al','Kuwait Airways','Oman Air',
+    // Asia-Pacific
+    'Singapore Airlines','Cathay Pacific','ANA (All Nippon Airways)','Japan Airlines','Korean Air','Asiana Airlines',
+    'China Southern Airlines','China Eastern Airlines','Air China','Thai Airways','Malaysia Airlines','Garuda Indonesia',
+    'Philippine Airlines','Vietnam Airlines','IndiGo','Air India','Vistara','SpiceJet','Qantas','Virgin Australia',
+    'Jetstar Airways','Air New Zealand','EVA Air','China Airlines',
+    // Africa
+    'Ethiopian Airlines','Kenya Airways','South African Airways','EgyptAir','Royal Air Maroc',
+    // South America
+    'LATAM Airlines','GOL Linhas Aéreas','Azul Brazilian Airlines',
+    // Cargo
+    'FedEx Express','UPS Airlines','Atlas Air','DHL Aviation','Cargolux','Polar Air Cargo','Kalitta Air',
+    // Military / Government
+    'US Air Force','US Navy','US Army','US Coast Guard','Royal Air Force','Royal Canadian Air Force','Luftwaffe',
+    'French Air and Space Force','NATO',
+    // Business / GA
+    'NetJets','Flexjet','VistaJet','Wheels Up','XOJet',
+  ];
+
+  const COUNTRIES = [
+    'Afghanistan','Albania','Algeria','Andorra','Angola','Argentina','Armenia','Australia','Austria','Azerbaijan',
+    'Bahamas','Bahrain','Bangladesh','Barbados','Belarus','Belgium','Belize','Benin','Bhutan','Bolivia',
+    'Bosnia and Herzegovina','Botswana','Brazil','Brunei','Bulgaria','Burkina Faso','Burundi','Cambodia','Cameroon','Canada',
+    'Cape Verde','Central African Republic','Chad','Chile','China','Colombia','Comoros','Congo (Republic)','Congo (DRC)','Costa Rica',
+    'Croatia','Cuba','Cyprus','Czechia','Denmark','Djibouti','Dominica','Dominican Republic','Ecuador','Egypt',
+    'El Salvador','Equatorial Guinea','Eritrea','Estonia','Eswatini','Ethiopia','Fiji','Finland','France','Gabon',
+    'Gambia','Georgia','Germany','Ghana','Greece','Grenada','Guatemala','Guinea','Guinea-Bissau','Guyana',
+    'Haiti','Honduras','Hong Kong','Hungary','Iceland','India','Indonesia','Iran','Iraq','Ireland',
+    'Israel','Italy','Ivory Coast','Jamaica','Japan','Jordan','Kazakhstan','Kenya','Kiribati','Kosovo',
+    'Kuwait','Kyrgyzstan','Laos','Latvia','Lebanon','Lesotho','Liberia','Libya','Liechtenstein','Lithuania',
+    'Luxembourg','Madagascar','Malawi','Malaysia','Maldives','Mali','Malta','Marshall Islands','Mauritania','Mauritius',
+    'Mexico','Micronesia','Moldova','Monaco','Mongolia','Montenegro','Morocco','Mozambique','Myanmar','Namibia',
+    'Nauru','Nepal','Netherlands','New Zealand','Nicaragua','Niger','Nigeria','North Korea','North Macedonia','Norway',
+    'Oman','Pakistan','Palau','Palestine','Panama','Papua New Guinea','Paraguay','Peru','Philippines','Poland',
+    'Portugal','Qatar','Romania','Russia','Rwanda','Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines',
+    'Samoa','San Marino','São Tomé and Príncipe','Saudi Arabia','Senegal','Serbia','Seychelles','Sierra Leone',
+    'Singapore','Slovakia','Slovenia','Solomon Islands','Somalia','South Africa','South Korea','South Sudan','Spain','Sri Lanka',
+    'Sudan','Suriname','Sweden','Switzerland','Syria','Taiwan','Tajikistan','Tanzania','Thailand','Timor-Leste',
+    'Togo','Tonga','Trinidad and Tobago','Tunisia','Turkey','Turkmenistan','Tuvalu','Uganda','Ukraine','United Arab Emirates',
+    'United Kingdom','United States','Uruguay','Uzbekistan','Vanuatu','Vatican City','Venezuela','Vietnam','Yemen','Zambia','Zimbabwe',
+    'Other',
+  ];
+
+  const FIELDS = [
+    ['aircraft_type','Aircraft Type','text','e.g. Boeing 737-800'],
+    ['airline','Operator','text','e.g. Delta Air Lines'],
+    ['registration','Registration','text','e.g. N12345'],
+    ['msn','MSN','text','e.g. 37827'],
+    ['icao','ICAO Code','text','e.g. EDDF'],
+    ['country','Country','select', COUNTRIES],
+    ['date_taken','Date Taken','date'],
+    ['camera','Camera','text','e.g. Canon EOS R5'],
+    ['lens','Lens','text','e.g. RF 100-500mm'],
+    ['aperture','Aperture','text','e.g. f/7.1'],
+    ['shutter','Shutter','text','e.g. 1/1600'],
+    ['iso','ISO','text','e.g. 200'],
+  ];
+  const CHECKLIST = ['image_url','aircraft_type','airline','registration','icao'];
+
+  function esc(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+
+  // ---------------- storage ----------------
+  async function fetchAllPhotos(){
+    try{
+      const listRes = await window.storage.get(STORAGE_LIST_KEY, true);
+      const ids = JSON.parse(listRes.value);
+      const out = [];
+      for(const id of ids){
+        try{ const r = await window.storage.get('aa:photo:'+id, true); out.push(JSON.parse(r.value)); }catch(e){}
+      }
+      return out.sort((a,b)=>b.created_date - a.created_date);
+    }catch(e){ return []; }
+  }
+  async function savePhoto(photo){
+    await window.storage.set('aa:photo:'+photo.id, JSON.stringify(photo), true);
+    let ids = [];
+    try{ const r = await window.storage.get(STORAGE_LIST_KEY, true); ids = JSON.parse(r.value); }catch(e){}
+    if(!ids.includes(photo.id)) ids.unshift(photo.id);
+    await window.storage.set(STORAGE_LIST_KEY, JSON.stringify(ids), true);
+  }
+
+  // ---------------- routing ----------------
+  const views = ['home','browse','upload','detail'];
+  function goto(view){
+    if(view==='upload' && !currentUser){ showAuthStatus('Please sign in with Google before uploading.'); return; }
+    currentView = view;
+    views.forEach(v => document.getElementById('view-'+v).classList.toggle('hidden', v!==view));
+    document.querySelectorAll('.navlink').forEach(el=>{
+      el.classList.toggle('active', el.dataset.view===view);
+    });
+    window.scrollTo({top:0, behavior:'smooth'});
+    if(view==='browse') renderBrowse();
+  }
+  document.querySelectorAll('[data-view]').forEach(el=>{
+    el.addEventListener('click', ()=> goto(el.dataset.view));
+  });
+  document.getElementById('brandBtn').addEventListener('click', ()=>goto('home'));
+  document.getElementById('backToBrowse').addEventListener('click', ()=>goto('browse'));
+
+  // ---------------- photo card ----------------
+  function cardHTML(p){
+    return `
+      <div class="card-img-wrap">
+        <img src="${p.image_url}" alt="${esc(p.aircraft_type||'aircraft')}">
+        ${p.registration ? `<div class="card-reg-tag">${esc(p.registration)}</div>` : ''}
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="card-title">${esc((p.airline||'Unmarked')+' '+(p.aircraft_type||''))}</div>
+          <div class="card-sub">${esc(p.icao || 'ICAO unlogged')}</div>
+        </div>
+        <svg class="card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </div>`;
+  }
+  function makeCard(p){
+    const btn = document.createElement('button');
+    btn.className = 'card';
+    btn.innerHTML = cardHTML(p);
+    btn.addEventListener('click', ()=> openDetail(p.id));
+    return btn;
+  }
+
+  // ---------------- home render ----------------
+  function renderHome(){
+    const grid = document.getElementById('homeGallery');
+    const rest = photos.slice(0,8);
+    grid.innerHTML = '';
+    rest.forEach(p => grid.appendChild(makeCard(p)));
+    document.getElementById('homeEmpty').classList.toggle('hidden', photos.length>0);
+    document.getElementById('enterArchiveWrap').classList.toggle('hidden', photos.length===0);
+  }
+
+  // ---------------- browse render ----------------
+  function uniq(key){
+    return ['All', ...Array.from(new Set(photos.map(p=>p[key]).filter(Boolean)))];
+  }
+  function fillSelect(sel, options, current){
+    sel.innerHTML = options.map(o=>`<option value="${esc(o)}" ${o===current?'selected':''}>${esc(o)}</option>`).join('');
+  }
+  let browseFilters = {q:'', airline:'All', type:'All'};
+  function renderBrowseFilters(){
+    fillSelect(document.getElementById('filterAirline'), uniq('airline'), browseFilters.airline);
+    fillSelect(document.getElementById('filterType'), uniq('aircraft_type'), browseFilters.type);
+  }
+  function renderBrowse(){
+    renderBrowseFilters();
+    const q = browseFilters.q.trim().toLowerCase();
+    const results = photos.filter(p=>{
+      if(browseFilters.airline!=='All' && p.airline!==browseFilters.airline) return false;
+      if(browseFilters.type!=='All' && p.aircraft_type!==browseFilters.type) return false;
+      if(!q) return true;
+      return [p.airline,p.aircraft_type,p.registration,p.icao,p.country]
+        .filter(Boolean).some(v=>v.toLowerCase().includes(q));
+    });
+    document.getElementById('browseCount').textContent = `${results.length} contact${results.length===1?'':'s'} on radar`;
+    const grid = document.getElementById('browseGallery');
+    grid.innerHTML = '';
+    results.forEach(p=>grid.appendChild(makeCard(p)));
+    document.getElementById('browseEmpty').classList.toggle('hidden', results.length>0);
+  }
+  document.getElementById('browseSearch').addEventListener('input', e=>{ browseFilters.q = e.target.value; renderBrowse(); });
+  document.getElementById('filterAirline').addEventListener('change', e=>{ browseFilters.airline = e.target.value; renderBrowse(); });
+  document.getElementById('filterType').addEventListener('change', e=>{ browseFilters.type = e.target.value; renderBrowse(); });
+
+  // ---------------- upload page ----------------
+  const fieldGrid = document.getElementById('fieldGrid');
+  FIELDS.forEach(([key,label,type,extra])=>{
+    const div = document.createElement('div');
+    div.className = 'field';
+    let controlHTML = '';
+    if(type === 'select'){
+      const opts = ['<option value="">Select…</option>'].concat(
+        extra.map(o=>`<option value="${esc(o)}">${esc(o)}</option>`)
+      ).join('');
+      controlHTML = `<select id="f_${key}">${opts}</select>`;
+    } else if(type === 'select-group'){
+      const groups = Object.entries(extra).map(([groupLabel, items])=>{
+        const opts = items.map(o=>`<option value="${esc(o)}">${esc(o)}</option>`).join('');
+        return `<optgroup label="${esc(groupLabel)}">${opts}</optgroup>`;
+      }).join('');
+      controlHTML = `<select id="f_${key}"><option value="">Select…</option>${groups}</select>`;
+    } else if(type === 'date'){
+      controlHTML = `<input type="date" id="f_${key}">`;
+    } else {
+      controlHTML = `<input type="text" id="f_${key}" placeholder="${esc(extra||'')}">`;
+    }
+    div.innerHTML = `<label>${label}</label>${controlHTML}`;
+    fieldGrid.appendChild(div);
+  });
+  function updateFormState(){
+    const v = formValues();
+    const ready = !!v.image_url && !!v.aircraft_type;
+    document.getElementById('submitUploadBtn').disabled = !ready;
+    document.getElementById('reqHint').classList.toggle('hidden', ready);
+  }
+  fieldGrid.addEventListener('input', updateFormState);
+  document.getElementById('fNotes').addEventListener('input', updateFormState);
+
+  const dropzone = document.getElementById('dropzone');
+  const dzEmpty = document.getElementById('dzEmpty');
+  const dzPreview = document.getElementById('dzPreview');
+  const fileInput = document.getElementById('fileInput');
+  const fileErr = document.getElementById('fileErr');
+
+  dropzone.addEventListener('click', ()=>fileInput.click());
+  dropzone.addEventListener('dragover', e=>{ e.preventDefault(); dropzone.style.borderColor='#3b82f6'; });
+  dropzone.addEventListener('dragleave', ()=>{ dropzone.style.borderColor=''; });
+  dropzone.addEventListener('drop', e=>{
+    e.preventDefault(); dropzone.style.borderColor='';
+    if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', ()=>{ if(fileInput.files[0]) handleFile(fileInput.files[0]); });
+
+  function handleFile(file){
+    if(!file.type.startsWith('image/')){ fileErr.classList.remove('hidden'); return; }
+    fileErr.classList.add('hidden');
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      pendingImage = reader.result;
+      dzEmpty.classList.add('hidden');
+      dzPreview.classList.remove('hidden');
+      dzPreview.src = pendingImage;
+      dropzone.classList.add('has-img');
+      updateFormState();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function resetUploadForm(){
+    pendingImage = null;
+    dzEmpty.classList.remove('hidden');
+    dzPreview.classList.add('hidden');
+    dropzone.classList.remove('has-img');
+    fileErr.classList.add('hidden');
+    FIELDS.forEach(([key])=>{ document.getElementById('f_'+key).value=''; });
+    document.getElementById('fNotes').value='';
+    updateFormState();
+  }
+
+  document.getElementById('submitUploadBtn').addEventListener('click', async ()=>{
+    const v = formValues();
+    if(!v.image_url || !v.aircraft_type){
+      fileErr.textContent = 'A photograph and aircraft type are required.';
+      fileErr.classList.remove('hidden');
+      return;
+    }
+    const btn = document.getElementById('submitUploadBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin"></span> Saving…';
+    if(!currentUser){ showAuthStatus('Please sign in with Google before uploading.', true); return; }
+    const photo = Object.assign({}, v, {
+      id: 'r'+Date.now()+Math.random().toString(36).slice(2,7),
+      user_id: currentUser.uid,
+      uploader_name: currentUser.displayName || '',
+      uploader_email: currentUser.email || '',
+      views: 0,
+      created_date: Date.now()
+    });
+    try{
+      await savePhoto(photo);
+      photos.unshift(photo);
+      resetUploadForm();
+      openDetail(photo.id);
+    }catch(e){
+      fileErr.textContent = 'Could not save. Try a smaller image.';
+      fileErr.classList.remove('hidden');
+    }
+    btn.disabled = false;
+    btn.textContent = 'Cleared for Takeoff';
+    updateFormState();
+  });
+
+  // ---------------- detail page ----------------
+  async function openDetail(id){
+    activeId = id;
+    const p = photos.find(x=>x.id===id);
+    goto('detail');
+    if(!p){
+      document.getElementById('detailTitle').textContent = 'This frame is no longer in the registry.';
+      document.getElementById('detailImg').src = '';
+      document.getElementById('fdrGrid').innerHTML = '';
+      document.getElementById('hwBadges').innerHTML = '';
+      document.getElementById('hwLabel').classList.add('hidden');
+      document.getElementById('detailNotes').classList.add('hidden');
+      return;
+    }
+    document.getElementById('detailImg').src = p.image_url;
+    document.getElementById('detailTitle').textContent = `${p.airline || 'Unmarked'} ${p.aircraft_type || ''}`;
+    const notesEl = document.getElementById('detailNotes');
+    if(p.notes){ notesEl.textContent = p.notes; notesEl.classList.remove('hidden'); }
+    else notesEl.classList.add('hidden');
+
+    const fdr = [
+      ['Operator', p.airline],
+      ['Aircraft Type', p.aircraft_type],
+      ['Registration', p.registration, true],
+      ['MSN', p.msn],
+      ['ICAO', p.icao],
+      ['Country', p.country],
+      ['Date Taken', p.date_taken],
+      ['Views', String((p.views||0)+1)],
+    ].filter(([,v])=>v);
+    document.getElementById('fdrGrid').innerHTML = fdr.map(([label,value,hl])=>`
+      <div class="fdr-field">
+        <div class="lbl">${label}</div>
+        <div class="val ${hl?'highlight':''}">${esc(value)}</div>
+      </div>`).join('');
+
+    const exif = [['Camera',p.camera],['Lens',p.lens],['Aperture',p.aperture],['Shutter',p.shutter],['ISO',p.iso]].filter(([,v])=>v);
+    const hwBadges = document.getElementById('hwBadges');
+    const hwLabel = document.getElementById('hwLabel');
+    if(exif.length){
+      hwLabel.classList.remove('hidden');
+      hwBadges.innerHTML = exif.map(([k,v])=>`<span class="hw-badge"><span class="k">${k}</span> ${esc(v)}</span>`).join('');
+    }else{
+      hwLabel.classList.add('hidden');
+      hwBadges.innerHTML = '';
+    }
+
+    // bump views
+    p.views = (p.views||0)+1;
+    try{ await savePhoto(p); }catch(e){}
+  }
+
+  function updateFooter(){
+    document.getElementById('footerCount').textContent = `${photos.length} frame${photos.length===1?'':'s'} logged`;
+  }
+
+  // ---------------- init ----------------
+  (async function init(){
+    photos = await fetchAllPhotos();
+    renderHome();
+    updateFooter();
+    updateFormState();
+  })();
+})();
+</script>
+</body>
+</html>
