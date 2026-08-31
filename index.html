@@ -74,40 +74,14 @@
   .account-chevron{width:12px;height:12px;color:var(--text-dimmer);}
   .account-menu{position:absolute;right:0;top:calc(100% + 10px);width:230px;padding:12px;background:#0a0c0f;border:1px solid var(--line-2);box-shadow:0 18px 45px rgba(0,0,0,.45);z-index:100;}
   .account-menu.hidden{display:none;}
-  .account-info{padding:10px 10px 14px;border-bottom:1px solid var(--line);}
+  .account-info{padding:10px 10px 14px;border-bottom:1px solid var(--line);cursor:pointer;transition:opacity .15s;}
+  .account-info:hover{opacity:.8;}
   .account-info strong{display:block;font-size:13px;font-weight:400;color:var(--text);}
   .account-info span{display:block;margin-top:5px;font-size:11px;color:var(--text-dimmer);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .account-menu-btn{width:100%;margin-top:10px;border:1px solid var(--line-2);background:transparent;color:var(--text-dim);padding:10px 12px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.2em;}
   .account-menu-btn:hover{border-color:rgba(59,130,246,.45);color:var(--blue);}
   .auth-status{position:fixed;right:24px;bottom:24px;z-index:200;padding:12px 16px;background:#0a0c0f;border:1px solid var(--line-2);font-size:12px;color:var(--text);box-shadow:0 15px 40px rgba(0,0,0,.4);}
   .auth-status.error{color:var(--amber);}
-
-  /* ---------- authentication page ---------- */
-  .auth-page{min-height:calc(100vh - 110px);display:flex;align-items:center;justify-content:center;padding:70px 20px;}
-  .auth-card{width:100%;max-width:460px;border:1px solid var(--line);padding:42px;background:rgba(10,12,15,.72);box-shadow:0 24px 70px rgba(0,0,0,.28);}
-  .auth-card h1{margin:14px 0 0;font-size:32px;font-weight:300;color:var(--text);}
-  .auth-card .auth-sub{margin:12px 0 30px;font-size:14px;line-height:1.6;color:var(--text-dim);}
-  .google-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;padding:13px 18px;border:1px solid var(--line-2);background:#fff;color:#202124;font-size:12px;letter-spacing:.08em;text-transform:uppercase;transition:background .15s,transform .15s;}
-  .google-btn:hover{background:#f1f3f4;transform:translateY(-1px);}
-  .google-icon{width:18px;height:18px;flex-shrink:0;}
-  .auth-divider{display:flex;align-items:center;gap:14px;margin:24px 0;color:var(--text-dimmer);font-size:10px;text-transform:uppercase;letter-spacing:.25em;}
-  .auth-divider:before,.auth-divider:after{content:"";height:1px;flex:1;background:var(--line);}
-  .auth-form{display:grid;gap:17px;}
-  .auth-field label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.3em;color:var(--text-dimmer);}
-  .auth-field input{margin-top:9px;width:100%;background:transparent;border:none;border-bottom:1px solid var(--line-2);padding:11px 0;font-size:15px;color:var(--text);outline:none;}
-  .auth-field input:focus{border-color:var(--blue);}
-  .auth-field input::placeholder{color:rgba(196,205,212,.25);}
-  .auth-submit{width:100%;border:none;background:var(--blue);color:var(--bg);padding:14px 20px;font-size:11px;text-transform:uppercase;letter-spacing:.22em;transition:background .15s;margin-top:3px;}
-  .auth-submit:hover{background:var(--blue-hover);}
-  .auth-submit:disabled{opacity:.5;cursor:not-allowed;}
-  .auth-switch{text-align:center;margin-top:22px;font-size:13px;color:var(--text-dimmer);}
-  .auth-switch button,.auth-link{background:none;border:none;padding:0;color:var(--blue);font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
-  .auth-forgot{text-align:right;margin-top:-7px;}
-  .auth-forgot button{background:none;border:none;color:var(--text-dimmer);font-size:11px;cursor:pointer;padding:0;}
-  .auth-forgot button:hover{color:var(--blue);}
-  .auth-error{margin-top:18px;border:1px solid rgba(251,191,36,.3);padding:12px 14px;color:var(--amber);font-size:12px;line-height:1.5;}
-  .auth-back{display:block;margin:24px auto 0;background:none;border:none;color:var(--text-dimmer);font-size:10px;text-transform:uppercase;letter-spacing:.25em;cursor:pointer;}
-  .auth-back:hover{color:var(--blue);}
   @media (max-width:900px){.account-menu{right:-10px;}}
 
   /* ---------- page header (no hero image) ---------- */
@@ -310,33 +284,6 @@
 
   .hidden{display:none !important;}
 
-
-  /* ---------- authentication page ---------- */
-  .auth-page{min-height:calc(100vh - 110px);display:flex;align-items:center;justify-content:center;padding:70px 20px;}
-  .auth-card{width:100%;max-width:460px;border:1px solid var(--line);padding:42px;background:rgba(10,12,15,.72);box-shadow:0 24px 70px rgba(0,0,0,.28);}
-  .auth-card h1{margin:14px 0 0;font-size:32px;font-weight:300;color:var(--text);}
-  .auth-card .auth-sub{margin:12px 0 30px;font-size:14px;line-height:1.6;color:var(--text-dim);}
-  .google-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;padding:13px 18px;border:1px solid var(--line-2);background:#fff;color:#202124;font-size:12px;letter-spacing:.08em;text-transform:uppercase;transition:background .15s,transform .15s;}
-  .google-btn:hover{background:#f1f3f4;transform:translateY(-1px);}
-  .google-icon{width:18px;height:18px;flex-shrink:0;}
-  .auth-divider{display:flex;align-items:center;gap:14px;margin:24px 0;color:var(--text-dimmer);font-size:10px;text-transform:uppercase;letter-spacing:.25em;}
-  .auth-divider:before,.auth-divider:after{content:"";height:1px;flex:1;background:var(--line);}
-  .auth-form{display:grid;gap:17px;}
-  .auth-field label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.3em;color:var(--text-dimmer);}
-  .auth-field input{margin-top:9px;width:100%;background:transparent;border:none;border-bottom:1px solid var(--line-2);padding:11px 0;font-size:15px;color:var(--text);outline:none;}
-  .auth-field input:focus{border-color:var(--blue);}
-  .auth-field input::placeholder{color:rgba(196,205,212,.25);}
-  .auth-submit{width:100%;border:none;background:var(--blue);color:var(--bg);padding:14px 20px;font-size:11px;text-transform:uppercase;letter-spacing:.22em;transition:background .15s;margin-top:3px;}
-  .auth-submit:hover{background:var(--blue-hover);}
-  .auth-submit:disabled{opacity:.5;cursor:not-allowed;}
-  .auth-switch{text-align:center;margin-top:22px;font-size:13px;color:var(--text-dimmer);}
-  .auth-switch button,.auth-link{background:none;border:none;padding:0;color:var(--blue);font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
-  .auth-forgot{text-align:right;margin-top:-7px;}
-  .auth-forgot button{background:none;border:none;color:var(--text-dimmer);font-size:11px;cursor:pointer;padding:0;}
-  .auth-forgot button:hover{color:var(--blue);}
-  .auth-error{margin-top:18px;border:1px solid rgba(251,191,36,.3);padding:12px 14px;color:var(--amber);font-size:12px;line-height:1.5;}
-  .auth-back{display:block;margin:24px auto 0;background:none;border:none;color:var(--text-dimmer);font-size:10px;text-transform:uppercase;letter-spacing:.25em;cursor:pointer;}
-  .auth-back:hover{color:var(--blue);}
   @media (max-width:900px){
     nav.mainnav{display:none;}
     .header-inner{padding:14px 20px;}
@@ -378,7 +325,11 @@
         <svg class="account-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 9 6 6 6-6"/></svg>
       </button>
       <div class="account-menu hidden" id="accountMenu">
-        <div class="account-info"><strong id="accountName">Not signed in</strong><span id="accountEmail">Sign in with Google to create your account.</span></div>
+        <div class="account-info" id="accountInfo" title="View profile">
+          <strong id="accountName">Not signed in</strong>
+          <span id="accountEmail">Sign in with Google to create your account.</span>
+        </div>
+        <button class="account-menu-btn hidden" id="viewProfileBtn" type="button">View Profile</button>
         <button class="account-menu-btn hidden" id="signOutBtn" type="button">Sign Out</button>
       </div>
     </div>
@@ -562,10 +513,30 @@
   const accountLabel = document.getElementById('accountLabel');
   const accountName = document.getElementById('accountName');
   const accountEmail = document.getElementById('accountEmail');
+  const accountInfo = document.getElementById('accountInfo');
+  const viewProfileBtn = document.getElementById('viewProfileBtn');
   const signOutBtn = document.getElementById('signOutBtn');
   function showAuthStatus(message,isError=false){ const old=document.querySelector('.auth-status'); if(old) old.remove(); const el=document.createElement('div'); el.className='auth-status'+(isError?' error':''); el.textContent=message; document.body.appendChild(el); setTimeout(()=>el.remove(),4500); }
-  function updateAccountUI(user){ currentUser=user||null; if(user){ const name=user.displayName||user.email?.split('@')[0]||'Account'; accountLabel.textContent=name; accountName.textContent=name; accountEmail.textContent=user.email||''; signOutBtn.classList.remove('hidden'); } else { accountLabel.textContent='Sign In'; accountName.textContent='Not signed in'; accountEmail.textContent='Sign in to upload photographs.'; signOutBtn.classList.add('hidden'); } }
+  function updateAccountUI(user){
+    currentUser = user||null;
+    if(user){
+      const name = user.displayName || user.email?.split('@')[0] || 'Account';
+      accountLabel.textContent = name;
+      accountName.textContent = name;
+      accountEmail.textContent = user.email || '';
+      viewProfileBtn.classList.remove('hidden');
+      signOutBtn.classList.remove('hidden');
+    } else {
+      accountLabel.textContent = 'Sign In';
+      accountName.textContent = 'Not signed in';
+      accountEmail.textContent = 'Sign in to upload photographs.';
+      viewProfileBtn.classList.add('hidden');
+      signOutBtn.classList.add('hidden');
+    }
+  }
   accountBtn.addEventListener('click',()=>{ if(currentUser) accountMenu.classList.toggle('hidden'); else window.location.href='auth.html'; });
+  accountInfo.addEventListener('click', ()=>{ if(currentUser) window.location.href='profile.html'; });
+  viewProfileBtn.addEventListener('click', ()=>{ window.location.href='profile.html'; });
   signOutBtn.addEventListener('click',async()=>{ try{await window.firebaseAuthAPI.signOut(); accountMenu.classList.add('hidden'); showAuthStatus('Signed out.');}catch(e){console.error(e);showAuthStatus('Could not sign out. Please try again.',true);} });
   document.addEventListener('click',e=>{if(!e.target.closest('.account-wrap')) accountMenu.classList.add('hidden');});
   window.firebaseAuthAPI.onChange(updateAccountUI);
@@ -618,31 +589,22 @@
 
   const OPERATORS = [
     'Private / Unmarked','Other / Charter',
-    // North America
     'American Airlines','Delta Air Lines','United Airlines','Southwest Airlines','Alaska Airlines','JetBlue',
     'Spirit Airlines','Frontier Airlines','Hawaiian Airlines','Allegiant Air','Air Canada','WestJet','Porter Airlines',
     'Aeromexico','Volaris','Copa Airlines','Avianca',
-    // Europe
     'Lufthansa','British Airways','Air France','KLM','Iberia','Swiss Intl Air Lines','Austrian Airlines','TAP Air Portugal',
     'Ryanair','easyJet','Wizz Air','Vueling','Norwegian Air Shuttle','SAS Scandinavian Airlines','Finnair','Aer Lingus',
     'LOT Polish Airlines','Turkish Airlines','Aegean Airlines','Icelandair',
-    // Middle East
     'Emirates','Qatar Airways','Etihad Airways','Saudia','Gulf Air','Royal Jordanian','El Al','Kuwait Airways','Oman Air',
-    // Asia-Pacific
     'Singapore Airlines','Cathay Pacific','ANA (All Nippon Airways)','Japan Airlines','Korean Air','Asiana Airlines',
     'China Southern Airlines','China Eastern Airlines','Air China','Thai Airways','Malaysia Airlines','Garuda Indonesia',
     'Philippine Airlines','Vietnam Airlines','IndiGo','Air India','Vistara','SpiceJet','Qantas','Virgin Australia',
     'Jetstar Airways','Air New Zealand','EVA Air','China Airlines',
-    // Africa
     'Ethiopian Airlines','Kenya Airways','South African Airways','EgyptAir','Royal Air Maroc',
-    // South America
     'LATAM Airlines','GOL Linhas Aéreas','Azul Brazilian Airlines',
-    // Cargo
     'FedEx Express','UPS Airlines','Atlas Air','DHL Aviation','Cargolux','Polar Air Cargo','Kalitta Air',
-    // Military / Government
     'US Air Force','US Navy','US Army','US Coast Guard','Royal Air Force','Royal Canadian Air Force','Luftwaffe',
     'French Air and Space Force','NATO',
-    // Business / GA
     'NetJets','Flexjet','VistaJet','Wheels Up','XOJet',
   ];
 
@@ -816,6 +778,13 @@
     div.innerHTML = `<label>${label}</label>${controlHTML}`;
     fieldGrid.appendChild(div);
   });
+  function formValues(){
+    const v = {};
+    FIELDS.forEach(([key])=>{ v[key] = document.getElementById('f_'+key).value.trim(); });
+    v.notes = document.getElementById('fNotes').value.trim();
+    v.image_url = pendingImage;
+    return v;
+  }
   function updateFormState(){
     const v = formValues();
     const ready = !!v.image_url && !!v.aircraft_type;
@@ -867,7 +836,7 @@
   }
 
   document.getElementById('submitUploadBtn').addEventListener('click', async ()=>{
-    if(!currentUser){ goto('auth'); return; }
+    if(!currentUser){ window.location.href='auth.html?return=upload'; return; }
     const v = formValues();
     if(!v.image_url || !v.aircraft_type){
       fileErr.textContent = 'A photograph and aircraft type are required.';
@@ -877,7 +846,6 @@
     const btn = document.getElementById('submitUploadBtn');
     btn.disabled = true;
     btn.innerHTML = '<span class="spin"></span> Saving…';
-    if(!currentUser){ showAuthStatus('Please sign in with Google before uploading.', true); return; }
     const photo = Object.assign({}, v, {
       id: 'r'+Date.now()+Math.random().toString(36).slice(2,7),
       user_id: currentUser.uid,
@@ -947,7 +915,6 @@
       hwBadges.innerHTML = '';
     }
 
-    // bump views
     p.views = (p.views||0)+1;
     try{ await savePhoto(p); }catch(e){}
   }
@@ -962,6 +929,10 @@
     renderHome();
     updateFooter();
     updateFormState();
+
+    const params = new URLSearchParams(window.location.search);
+    const openId = params.get('open');
+    if(openId){ openDetail(openId); }
   })();
 })();
 </script>

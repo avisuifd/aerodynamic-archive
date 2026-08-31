@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aerodynamic/Archive — Profile</title>
+<style>
+  :root{
+    --bg:#050608;
+    --line:rgba(255,255,255,0.06);
+    --line-2:rgba(255,255,255,0.09);
+    --text:#c4cdd4;
+    --text-dim:rgba(196,205,212,0.5);
+    --text-dimmer:rgba(196,205,212,0.35);
+    --blue:#3b82f6;
+    --blue-hover:#60a5fa;
+    --amber:#fbbf24;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'Consolas', 'SFMono-Regular', Menlo, monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--font);}
+  body{min-height:100vh;font-weight:300;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:var(--font);cursor:pointer;}
+  .hidden{display:none !important;}
+
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(5,6,8,0.95);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .header-inner{
+    max-width:1200px;margin:0 auto;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 40px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;background:none;border:none;padding:0;}
+  .brand svg{width:16px;height:16px;color:var(--blue);flex-shrink:0;}
+  .brand-text{
+    border:1px solid var(--line-2);
+    padding:5px 10px;
+    font-size:11px;font-weight:500;
+    text-transform:uppercase;letter-spacing:.2em;
+    color:var(--text);
+  }
+  .brand-text .slash{color:var(--blue);}
+  .back-link{
+    display:flex;align-items:center;gap:8px;background:none;border:none;
+    font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:var(--text-dimmer);
+    transition:color .15s;
+  }
+  .back-link:hover{color:var(--blue);}
+  .back-link svg{width:13px;height:13px;}
+
+  .wrap{max-width:1200px;margin:0 auto;padding:56px 40px 100px;}
+
+  .eyebrow{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.4em;color:var(--blue);}
+
+  /* ---------- profile header card ---------- */
+  .profile-card{
+    margin-top:24px;
+    display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start;
+    border:1px solid var(--line);padding:36px;
+  }
+  .avatar{
+    width:72px;height:72px;flex-shrink:0;
+    border:1px solid var(--line-2);
+    display:flex;align-items:center;justify-content:center;
+    font-size:24px;font-weight:400;color:var(--blue);
+    background:rgba(59,130,246,0.06);
+  }
+  .profile-main{flex:1;min-width:240px;}
+  .name-row{display:flex;flex-wrap:wrap;align-items:center;gap:14px;}
+  .name-display{font-size:26px;font-weight:300;color:var(--text);}
+  .edit-name-btn{
+    border:1px solid var(--line-2);background:transparent;color:var(--text-dim);
+    padding:6px 12px;font-size:10px;text-transform:uppercase;letter-spacing:.2em;
+    transition:border-color .15s,color .15s;
+  }
+  .edit-name-btn:hover{border-color:rgba(59,130,246,.5);color:var(--blue);}
+  .email-line{margin-top:8px;font-size:13px;color:var(--text-dimmer);}
+
+  .name-edit-row{display:none;margin-top:14px;gap:12px;align-items:center;flex-wrap:wrap;}
+  .name-edit-row.show{display:flex;}
+  .name-edit-row input{
+    background:transparent;border:none;border-bottom:1px solid var(--line-2);
+    padding:8px 0;font-size:18px;color:var(--text);outline:none;min-width:220px;
+    transition:border-color .2s;
+  }
+  .name-edit-row input:focus{border-color:var(--blue);}
+  .save-name-btn{
+    border:none;background:var(--blue);color:var(--bg);
+    padding:9px 18px;font-size:10px;text-transform:uppercase;letter-spacing:.2em;
+    transition:background .15s,opacity .15s;
+  }
+  .save-name-btn:hover{background:var(--blue-hover);}
+  .save-name-btn:disabled{opacity:.5;cursor:not-allowed;}
+  .cancel-name-btn{
+    border:none;background:transparent;color:var(--text-dimmer);
+    font-size:10px;text-transform:uppercase;letter-spacing:.2em;padding:9px 4px;
+  }
+  .cancel-name-btn:hover{color:var(--text);}
+  .name-status{margin-top:10px;font-size:12px;}
+  .name-status.ok{color:var(--blue);}
+  .name-status.err{color:var(--amber);}
+
+  /* ---------- stats ---------- */
+  .stats-row{display:flex;gap:1px;flex-wrap:wrap;margin-top:36px;background:var(--line);border:1px solid var(--line);}
+  .stat-box{flex:1;min-width:140px;background:var(--bg);padding:22px 24px;}
+  .stat-num{font-size:30px;font-weight:300;color:var(--text);}
+  .stat-label{margin-top:6px;font-size:10px;text-transform:uppercase;letter-spacing:.25em;color:var(--text-dimmer);}
+
+  /* ---------- section heading ---------- */
+  .section-heading{max-width:600px;margin:64px 0 40px;}
+  .section-heading h2{margin:14px 0 0;font-size:26px;font-weight:300;line-height:1.15;color:var(--text);}
+  .section-heading p{margin:12px 0 0;font-size:14px;line-height:1.6;color:var(--text-dim);}
+
+  /* ---------- gallery ---------- */
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+    gap:28px 24px;
+  }
+  .card{background:none;border:none;padding:0;text-align:left;width:100%;color:inherit;}
+  .card-img-wrap{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;background:#000;}
+  .card-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease;}
+  .card:hover .card-img-wrap img{transform:scale(1.04);}
+  .card-reg-tag{
+    position:absolute;top:12px;left:12px;
+    border:1px solid var(--line-2);background:rgba(0,0,0,0.6);
+    padding:4px 10px;font-family:var(--font-mono);
+    font-size:10px;text-transform:uppercase;letter-spacing:.2em;color:var(--text);
+    backdrop-filter:blur(2px);
+  }
+  .card-body{margin-top:14px;display:flex;justify-content:space-between;gap:16px;}
+  .card-title{font-size:15px;font-weight:300;color:var(--text);line-height:1.3;}
+  .card-sub{margin-top:5px;font-size:12px;color:var(--text-dimmer);}
+  .card-arrow{width:14px;height:14px;color:var(--blue);opacity:0;transition:opacity .2s;flex-shrink:0;margin-top:4px;}
+  .card:hover .card-arrow{opacity:1;}
+
+  .empty-line{font-size:14px;color:var(--text-dim);}
+  .empty-line button{background:none;border:none;color:var(--blue);text-decoration:underline;text-underline-offset:4px;padding:0;font-size:14px;}
+
+  .loading-row{display:flex;align-items:center;gap:10px;color:var(--text-dim);font-size:13px;padding:30px 0;}
+  .spin{width:14px;height:14px;border:2px solid rgba(255,255,255,0.15);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  @media (max-width:700px){
+    .header-inner{padding:14px 20px;}
+    .wrap{padding:40px 20px 80px;}
+    .profile-card{padding:26px;}
+    .stats-row{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <button class="brand" onclick="location.href='index.html'">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+      <span class="brand-text">Aerodynamic<span class="slash">/</span>Archive</span>
+    </button>
+    <button class="back-link" onclick="location.href='index.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      Back to Archive
+    </button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div id="loadingState" class="loading-row"><span class="spin"></span> Loading profile…</div>
+
+  <div id="profileContent" class="hidden">
+    <div class="eyebrow">Pilot Profile</div>
+
+    <div class="profile-card">
+      <div class="avatar" id="avatarInitial">A</div>
+      <div class="profile-main">
+        <div class="name-row" id="nameRow">
+          <div class="name-display" id="nameDisplay">—</div>
+          <button class="edit-name-btn" id="editNameBtn">Edit Name</button>
+        </div>
+        <div class="email-line" id="emailLine"></div>
+
+        <div class="name-edit-row" id="nameEditRow">
+          <input type="text" id="nameInput" placeholder="Display name" maxlength="60">
+          <button class="save-name-btn" id="saveNameBtn">Save</button>
+          <button class="cancel-name-btn" id="cancelNameBtn">Cancel</button>
+        </div>
+        <div class="name-status hidden" id="nameStatus"></div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-num" id="statPhotos">0</div>
+        <div class="stat-label">Photos Posted</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statViews">0</div>
+        <div class="stat-label">Total Views</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statTypes">0</div>
+        <div class="stat-label">Aircraft Types Logged</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statFirst">—</div>
+        <div class="stat-label">First Frame</div>
+      </div>
+    </div>
+
+    <div class="section-heading">
+      <div class="eyebrow">Your Log</div>
+      <h2>Frames you've posted.</h2>
+      <p>Every photograph you've submitted to the archive, newest first.</p>
+    </div>
+
+    <div class="gallery-grid" id="myGallery"></div>
+    <p class="empty-line hidden" id="myEmpty">You haven't posted any frames yet. <button onclick="location.href='index.html'">Upload your first one</button>.</p>
+  </div>
+
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCetqc0Yf9HmT_mrnZi34QqX-pIkQ23lUc",
+    authDomain: "aerodynamic-archive.firebaseapp.com",
+    projectId: "aerodynamic-archive",
+    storageBucket: "aerodynamic-archive.firebasestorage.app",
+    messagingSenderId: "497229791567",
+    appId: "1:497229791567:web:ba017dc034996a1feb853a",
+    measurementId: "G-9D83VPYR6Z"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  window.profileAuthAPI = {
+    onChange: (cb) => onAuthStateChanged(auth, cb),
+    updateDisplayName: (name) => updateProfile(auth.currentUser, { displayName: name }),
+  };
+</script>
+
+<script>
+(function(){
+  const STORAGE_LIST_KEY = 'aa:ids';
+
+  function esc(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+
+  async function fetchAllPhotos(){
+    try{
+      const listRes = await window.storage.get(STORAGE_LIST_KEY, true);
+      const ids = JSON.parse(listRes.value);
+      const out = [];
+      for(const id of ids){
+        try{ const r = await window.storage.get('aa:photo:'+id, true); out.push(JSON.parse(r.value)); }catch(e){}
+      }
+      return out.sort((a,b)=>b.created_date - a.created_date);
+    }catch(e){ return []; }
+  }
+
+  function cardHTML(p){
+    return `
+      <div class="card-img-wrap">
+        <img src="${p.image_url}" alt="${esc(p.aircraft_type||'aircraft')}">
+        ${p.registration ? `<div class="card-reg-tag">${esc(p.registration)}</div>` : ''}
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="card-title">${esc((p.airline||'Unmarked')+' '+(p.aircraft_type||''))}</div>
+          <div class="card-sub">${esc(p.icao || 'ICAO unlogged')}</div>
+        </div>
+        <svg class="card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </div>`;
+  }
+  function makeCard(p){
+    const btn = document.createElement('button');
+    btn.className = 'card';
+    btn.innerHTML = cardHTML(p);
+    btn.addEventListener('click', ()=>{ location.href = 'index.html?open=' + encodeURIComponent(p.id); });
+    return btn;
+  }
+
+  function renderStats(myPhotos){
+    document.getElementById('statPhotos').textContent = myPhotos.length;
+    const totalViews = myPhotos.reduce((sum,p)=> sum + (p.views||0), 0);
+    document.getElementById('statViews').textContent = totalViews;
+    const types = new Set(myPhotos.map(p=>p.aircraft_type).filter(Boolean));
+    document.getElementById('statTypes').textContent = types.size;
+    if(myPhotos.length){
+      const oldest = myPhotos.reduce((min,p)=> p.created_date < min.created_date ? p : min, myPhotos[0]);
+      const d = new Date(oldest.created_date);
+      document.getElementById('statFirst').textContent = d.toLocaleDateString(undefined,{month:'short', year:'numeric'});
+    } else {
+      document.getElementById('statFirst').textContent = '—';
+    }
+  }
+
+  function renderGallery(myPhotos){
+    const grid = document.getElementById('myGallery');
+    grid.innerHTML = '';
+    myPhotos.forEach(p => grid.appendChild(makeCard(p)));
+    document.getElementById('myEmpty').classList.toggle('hidden', myPhotos.length>0);
+  }
+
+  // ---------------- name editing ----------------
+  const nameRow = document.getElementById('nameRow');
+  const nameEditRow = document.getElementById('nameEditRow');
+  const nameDisplay = document.getElementById('nameDisplay');
+  const nameInput = document.getElementById('nameInput');
+  const nameStatus = document.getElementById('nameStatus');
+  const editNameBtn = document.getElementById('editNameBtn');
+  const saveNameBtn = document.getElementById('saveNameBtn');
+  const cancelNameBtn = document.getElementById('cancelNameBtn');
+
+  editNameBtn.addEventListener('click', ()=>{
+    nameInput.value = nameDisplay.textContent === '—' ? '' : nameDisplay.textContent;
+    nameEditRow.classList.add('show');
+    nameStatus.classList.add('hidden');
+    nameInput.focus();
+  });
+  cancelNameBtn.addEventListener('click', ()=>{
+    nameEditRow.classList.remove('show');
+    nameStatus.classList.add('hidden');
+  });
+
+  let currentUser = null;
+
+  saveNameBtn.addEventListener('click', async ()=>{
+    const newName = nameInput.value.trim();
+    if(!newName){
+      nameStatus.textContent = 'Display name can\'t be empty.';
+      nameStatus.className = 'name-status err';
+      return;
+    }
+    saveNameBtn.disabled = true;
+    saveNameBtn.textContent = 'Saving…';
+    try{
+      await window.profileAuthAPI.updateDisplayName(newName);
+      nameDisplay.textContent = newName;
+      document.getElementById('avatarInitial').textContent = newName.charAt(0).toUpperCase();
+      nameEditRow.classList.remove('show');
+      nameStatus.textContent = 'Display name updated.';
+      nameStatus.className = 'name-status ok';
+      setTimeout(()=> nameStatus.classList.add('hidden'), 3000);
+    }catch(e){
+      console.error(e);
+      nameStatus.textContent = 'Could not update your name. Please try again.';
+      nameStatus.className = 'name-status err';
+    }
+    saveNameBtn.disabled = false;
+    saveNameBtn.textContent = 'Save';
+  });
+
+  // ---------------- init ----------------
+  window.profileAuthAPI.onChange(async (user)=>{
+    if(!user){
+      location.href = 'auth.html?return=profile';
+      return;
+    }
+    currentUser = user;
+    const name = user.displayName || (user.email ? user.email.split('@')[0] : 'Pilot');
+    nameDisplay.textContent = name;
+    document.getElementById('avatarInitial').textContent = name.charAt(0).toUpperCase();
+    document.getElementById('emailLine').textContent = user.email || '';
+
+    const allPhotos = await fetchAllPhotos();
+    const myPhotos = allPhotos.filter(p => p.user_id === user.uid);
+    renderStats(myPhotos);
+    renderGallery(myPhotos);
+
+    document.getElementById('loadingState').classList.add('hidden');
+    document.getElementById('profileContent').classList.remove('hidden');
+  });
+})();
+</script>
+</body>
+</html>
