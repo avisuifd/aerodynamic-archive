@@ -4,15 +4,7 @@
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import {getAuth,GoogleAuthProvider,signInWithPopup,createUserWithEmailAndPassword,signInWithEmailAndPassword,sendPasswordResetEmail,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-const firebaseConfig = {
-  apiKey: "AIzaSyCetqc0Yf9HmT_mrnZi34QqX-pIkQ23lUc",
-  authDomain: "aerodynamic-archive.firebaseapp.com",
-  projectId: "aerodynamic-archive",
-  storageBucket: "aerodynamic-archive.firebasestorage.app",
-  messagingSenderId: "497229791567",
-  appId: "1:497229791567:web:ba017dc034996a1feb853a",
-  measurementId: "G-9D83VPYR6Z"
-};
+const firebaseConfig={apiKey:"AIzaSyCetqc0Yf9HmT_mrnZi34QqX-pIkQ23lUc",authDomain:"aerodynamic-archive.firebaseapp.com",projectId:"aerodynamic-archive",storageBucket:"aerodynamic-archive.firebasestorage.app",messagingSenderId:"497229791567",appId:"1:497229791567:web:ba017dc034996a1feb853a",measurementId:"G-9D83VPYR6Z"};
 const app=initializeApp(firebaseConfig),auth=getAuth(app),provider=new GoogleAuthProvider();
 const $=id=>document.getElementById(id), error=$('error'); let mode='signin';
 function msg(x){error.textContent=x;error.hidden=false} function clear(){error.hidden=true}
