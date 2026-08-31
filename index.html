@@ -81,6 +81,33 @@
   .account-menu-btn:hover{border-color:rgba(59,130,246,.45);color:var(--blue);}
   .auth-status{position:fixed;right:24px;bottom:24px;z-index:200;padding:12px 16px;background:#0a0c0f;border:1px solid var(--line-2);font-size:12px;color:var(--text);box-shadow:0 15px 40px rgba(0,0,0,.4);}
   .auth-status.error{color:var(--amber);}
+
+  /* ---------- authentication page ---------- */
+  .auth-page{min-height:calc(100vh - 110px);display:flex;align-items:center;justify-content:center;padding:70px 20px;}
+  .auth-card{width:100%;max-width:460px;border:1px solid var(--line);padding:42px;background:rgba(10,12,15,.72);box-shadow:0 24px 70px rgba(0,0,0,.28);}
+  .auth-card h1{margin:14px 0 0;font-size:32px;font-weight:300;color:var(--text);}
+  .auth-card .auth-sub{margin:12px 0 30px;font-size:14px;line-height:1.6;color:var(--text-dim);}
+  .google-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;padding:13px 18px;border:1px solid var(--line-2);background:#fff;color:#202124;font-size:12px;letter-spacing:.08em;text-transform:uppercase;transition:background .15s,transform .15s;}
+  .google-btn:hover{background:#f1f3f4;transform:translateY(-1px);}
+  .google-icon{width:18px;height:18px;flex-shrink:0;}
+  .auth-divider{display:flex;align-items:center;gap:14px;margin:24px 0;color:var(--text-dimmer);font-size:10px;text-transform:uppercase;letter-spacing:.25em;}
+  .auth-divider:before,.auth-divider:after{content:"";height:1px;flex:1;background:var(--line);}
+  .auth-form{display:grid;gap:17px;}
+  .auth-field label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.3em;color:var(--text-dimmer);}
+  .auth-field input{margin-top:9px;width:100%;background:transparent;border:none;border-bottom:1px solid var(--line-2);padding:11px 0;font-size:15px;color:var(--text);outline:none;}
+  .auth-field input:focus{border-color:var(--blue);}
+  .auth-field input::placeholder{color:rgba(196,205,212,.25);}
+  .auth-submit{width:100%;border:none;background:var(--blue);color:var(--bg);padding:14px 20px;font-size:11px;text-transform:uppercase;letter-spacing:.22em;transition:background .15s;margin-top:3px;}
+  .auth-submit:hover{background:var(--blue-hover);}
+  .auth-submit:disabled{opacity:.5;cursor:not-allowed;}
+  .auth-switch{text-align:center;margin-top:22px;font-size:13px;color:var(--text-dimmer);}
+  .auth-switch button,.auth-link{background:none;border:none;padding:0;color:var(--blue);font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+  .auth-forgot{text-align:right;margin-top:-7px;}
+  .auth-forgot button{background:none;border:none;color:var(--text-dimmer);font-size:11px;cursor:pointer;padding:0;}
+  .auth-forgot button:hover{color:var(--blue);}
+  .auth-error{margin-top:18px;border:1px solid rgba(251,191,36,.3);padding:12px 14px;color:var(--amber);font-size:12px;line-height:1.5;}
+  .auth-back{display:block;margin:24px auto 0;background:none;border:none;color:var(--text-dimmer);font-size:10px;text-transform:uppercase;letter-spacing:.25em;cursor:pointer;}
+  .auth-back:hover{color:var(--blue);}
   @media (max-width:900px){.account-menu{right:-10px;}}
 
   /* ---------- page header (no hero image) ---------- */
@@ -283,6 +310,33 @@
 
   .hidden{display:none !important;}
 
+
+  /* ---------- authentication page ---------- */
+  .auth-page{min-height:calc(100vh - 110px);display:flex;align-items:center;justify-content:center;padding:70px 20px;}
+  .auth-card{width:100%;max-width:460px;border:1px solid var(--line);padding:42px;background:rgba(10,12,15,.72);box-shadow:0 24px 70px rgba(0,0,0,.28);}
+  .auth-card h1{margin:14px 0 0;font-size:32px;font-weight:300;color:var(--text);}
+  .auth-card .auth-sub{margin:12px 0 30px;font-size:14px;line-height:1.6;color:var(--text-dim);}
+  .google-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;padding:13px 18px;border:1px solid var(--line-2);background:#fff;color:#202124;font-size:12px;letter-spacing:.08em;text-transform:uppercase;transition:background .15s,transform .15s;}
+  .google-btn:hover{background:#f1f3f4;transform:translateY(-1px);}
+  .google-icon{width:18px;height:18px;flex-shrink:0;}
+  .auth-divider{display:flex;align-items:center;gap:14px;margin:24px 0;color:var(--text-dimmer);font-size:10px;text-transform:uppercase;letter-spacing:.25em;}
+  .auth-divider:before,.auth-divider:after{content:"";height:1px;flex:1;background:var(--line);}
+  .auth-form{display:grid;gap:17px;}
+  .auth-field label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.3em;color:var(--text-dimmer);}
+  .auth-field input{margin-top:9px;width:100%;background:transparent;border:none;border-bottom:1px solid var(--line-2);padding:11px 0;font-size:15px;color:var(--text);outline:none;}
+  .auth-field input:focus{border-color:var(--blue);}
+  .auth-field input::placeholder{color:rgba(196,205,212,.25);}
+  .auth-submit{width:100%;border:none;background:var(--blue);color:var(--bg);padding:14px 20px;font-size:11px;text-transform:uppercase;letter-spacing:.22em;transition:background .15s;margin-top:3px;}
+  .auth-submit:hover{background:var(--blue-hover);}
+  .auth-submit:disabled{opacity:.5;cursor:not-allowed;}
+  .auth-switch{text-align:center;margin-top:22px;font-size:13px;color:var(--text-dimmer);}
+  .auth-switch button,.auth-link{background:none;border:none;padding:0;color:var(--blue);font:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+  .auth-forgot{text-align:right;margin-top:-7px;}
+  .auth-forgot button{background:none;border:none;color:var(--text-dimmer);font-size:11px;cursor:pointer;padding:0;}
+  .auth-forgot button:hover{color:var(--blue);}
+  .auth-error{margin-top:18px;border:1px solid rgba(251,191,36,.3);padding:12px 14px;color:var(--amber);font-size:12px;line-height:1.5;}
+  .auth-back{display:block;margin:24px auto 0;background:none;border:none;color:var(--text-dimmer);font-size:10px;text-transform:uppercase;letter-spacing:.25em;cursor:pointer;}
+  .auth-back:hover{color:var(--blue);}
   @media (max-width:900px){
     nav.mainnav{display:none;}
     .header-inner{padding:14px 20px;}
@@ -447,6 +501,41 @@
   </section>
 </div>
 
+<!-- ============ AUTH VIEW ============ -->
+<div id="view-auth" class="hidden">
+  <section class="auth-page">
+    <div class="auth-card">
+      <div class="eyebrow">Archive Access</div>
+      <h1 id="authTitle">Sign in</h1>
+      <p class="auth-sub" id="authSubtitle">Sign in to upload photographs, manage your archive, and keep your account synced.</p>
+
+      <button class="google-btn" id="googleSignInBtn" type="button">
+        <svg class="google-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M21.35 12.23c0-.79-.07-1.55-.22-2.27H12v4.3h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.69 2.91-4.18 2.91-7.42z"/><path fill="#34A853" d="M12 21.5c2.63 0 4.84-.87 6.45-2.35l-3.14-2.45c-.87.58-1.98.92-3.31.92-2.54 0-4.7-1.72-5.47-4.03H3.28v2.53A9.75 9.75 0 0 0 12 21.5z"/><path fill="#FBBC05" d="M6.53 13.59A5.86 5.86 0 0 1 6.23 12c0-.55.1-1.09.3-1.59V7.88H3.28A9.75 9.75 0 0 0 2.25 12c0 1.57.38 3.05 1.03 4.12l3.25-2.53z"/><path fill="#EA4335" d="M12 6.38c1.43 0 2.71.49 3.72 1.46l2.79-2.79C16.83 3.37 14.63 2.5 12 2.5a9.75 9.75 0 0 0-8.72 5.38l3.25 2.53C7.3 8.1 9.46 6.38 12 6.38z"/></svg>
+        Continue with Google
+      </button>
+
+      <div class="auth-divider"><span>or</span></div>
+
+      <form class="auth-form" id="emailAuthForm">
+        <div class="auth-field">
+          <label for="authEmail">Email</label>
+          <input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
+        </div>
+        <div class="auth-field">
+          <label for="authPassword">Password</label>
+          <input id="authPassword" type="password" autocomplete="current-password" placeholder="••••••••" minlength="6" required>
+        </div>
+        <div class="auth-forgot" id="forgotWrap"><button id="forgotPasswordBtn" type="button">Forgot password?</button></div>
+        <button class="auth-submit" id="emailSubmitBtn" type="submit">Sign In</button>
+      </form>
+
+      <div class="auth-switch" id="authSwitch">Don't have an account? <button id="toggleAuthMode" type="button">Create one</button></div>
+      <div class="auth-error hidden" id="authError"></div>
+      <button class="auth-back" id="authBackBtn" type="button">Back to archive</button>
+    </div>
+  </section>
+</div>
+
 <!-- ============ DETAIL VIEW ============ -->
 <div id="view-detail" class="hidden">
   <div class="detail-hero"><img id="detailImg" src="" alt=""></div>
@@ -475,7 +564,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
   const firebaseConfig = {
   apiKey: "AIzaSyCetqc0Yf9HmT_mrnZi34QqX-pIkQ23lUc",
@@ -487,13 +576,15 @@
   measurementId: "G-9D83VPYR6Z"
 };
 
-
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
 
   window.firebaseAuthAPI = {
-    signIn: async () => (await signInWithPopup(auth, provider)).user,
+    signInGoogle: async () => (await signInWithPopup(auth, provider)).user,
+    signInEmail: async (email,password) => (await signInWithEmailAndPassword(auth,email,password)).user,
+    createEmail: async (email,password) => (await createUserWithEmailAndPassword(auth,email,password)).user,
+    resetPassword: async email => sendPasswordResetEmail(auth,email),
     signOut: () => signOut(auth),
     onChange: callback => onAuthStateChanged(auth, callback)
   };
@@ -532,15 +623,88 @@
       signOutBtn.classList.add('hidden');
     }
   }
-  accountBtn.addEventListener('click',async()=>{
+  accountBtn.addEventListener('click',()=>{
     if(currentUser){accountMenu.classList.toggle('hidden');return;}
-    try{accountBtn.disabled=true;accountLabel.textContent='Signing in…';await window.firebaseAuthAPI.signIn();showAuthStatus('Signed in successfully.');}
-    catch(e){console.error(e);updateAccountUI(null);if(e.code!=='auth/popup-closed-by-user')showAuthStatus('Google sign-in failed. Please try again.',true);}
-    finally{accountBtn.disabled=false;}
+    goto('auth');
   });
   signOutBtn.addEventListener('click',async()=>{try{await window.firebaseAuthAPI.signOut();accountMenu.classList.add('hidden');showAuthStatus('Signed out.');}catch(e){showAuthStatus('Could not sign out. Please try again.',true);}});
   document.addEventListener('click',e=>{if(!e.target.closest('.account-wrap'))accountMenu.classList.add('hidden');});
   window.firebaseAuthAPI.onChange(updateAccountUI);
+
+
+  // ---------------- authentication page ----------------
+  let authMode = 'signin';
+  const authTitle=document.getElementById('authTitle');
+  const authSubtitle=document.getElementById('authSubtitle');
+  const emailAuthForm=document.getElementById('emailAuthForm');
+  const authEmail=document.getElementById('authEmail');
+  const authPassword=document.getElementById('authPassword');
+  const emailSubmitBtn=document.getElementById('emailSubmitBtn');
+  const authSwitch=document.getElementById('authSwitch');
+  const toggleAuthMode=document.getElementById('toggleAuthMode');
+  const forgotWrap=document.getElementById('forgotWrap');
+  const forgotPasswordBtn=document.getElementById('forgotPasswordBtn');
+  const googleSignInBtn=document.getElementById('googleSignInBtn');
+  const authError=document.getElementById('authError');
+
+  function authMessage(message){ authError.textContent=message; authError.classList.remove('hidden'); }
+  function clearAuthMessage(){ authError.textContent=''; authError.classList.add('hidden'); }
+  function renderAuthMode(){
+    clearAuthMessage();
+    const create=authMode==='create';
+    authTitle.textContent=create?'Create your account':'Sign in';
+    authSubtitle.textContent=create?'Create an Aerodynamic/Archive account with Google or your email and password.':'Sign in to upload photographs, manage your archive, and keep your account synced.';
+    emailSubmitBtn.textContent=create?'Create Account':'Sign In';
+    authSwitch.innerHTML=create?'Already have an account? <button id="toggleAuthMode" type="button">Sign in</button>':'Don't have an account? <button id="toggleAuthMode" type="button">Create one</button>';
+    document.getElementById('toggleAuthMode').addEventListener('click',()=>{authMode=create?'signin':'create';renderAuthMode();});
+    forgotWrap.classList.toggle('hidden',create);
+    authPassword.setAttribute('autocomplete',create?'new-password':'current-password');
+  }
+  renderAuthMode();
+
+  googleSignInBtn.addEventListener('click',async()=>{
+    clearAuthMessage(); googleSignInBtn.disabled=true; googleSignInBtn.textContent='Connecting…';
+    try{ await window.firebaseAuthAPI.signInGoogle(); showAuthStatus('Signed in successfully.'); goto('home'); }
+    catch(e){ console.error(e); if(e.code!=='auth/popup-closed-by-user') authMessage(firebaseAuthError(e)); }
+    finally{ googleSignInBtn.disabled=false; googleSignInBtn.innerHTML='<svg class="google-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M21.35 12.23c0-.79-.07-1.55-.22-2.27H12v4.3h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.69 2.91-4.18 2.91-7.42z"/><path fill="#34A853" d="M12 21.5c2.63 0 4.84-.87 6.45-2.35l-3.14-2.45c-.87.58-1.98.92-3.31.92-2.54 0-4.7-1.72-5.47-4.03H3.28v2.53A9.75 9.75 0 0 0 12 21.5z"/><path fill="#FBBC05" d="M6.53 13.59A5.86 5.86 0 0 1 6.23 12c0-.55.1-1.09.3-1.59V7.88H3.28A9.75 9.75 0 0 0 2.25 12c0 1.57.38 3.05 1.03 4.12l3.25-2.53z"/><path fill="#EA4335" d="M12 6.38c1.43 0 2.71.49 3.72 1.46l2.79-2.79C16.83 3.37 14.63 2.5 12 2.5a9.75 9.75 0 0 0-8.72 5.38l3.25 2.53C7.3 8.1 9.46 6.38 12 6.38z"/></svg> Continue with Google'; }
+  });
+
+  emailAuthForm.addEventListener('submit',async e=>{
+    e.preventDefault(); clearAuthMessage(); emailSubmitBtn.disabled=true; emailSubmitBtn.textContent=authMode==='create'?'Creating…':'Signing in…';
+    const email=authEmail.value.trim(); const password=authPassword.value;
+    try{
+      if(authMode==='create') await window.firebaseAuthAPI.createEmail(email,password);
+      else await window.firebaseAuthAPI.signInEmail(email,password);
+      showAuthStatus(authMode==='create'?'Account created successfully.':'Signed in successfully.'); goto('home');
+    }catch(e){ console.error(e); authMessage(firebaseAuthError(e)); }
+    finally{ emailSubmitBtn.disabled=false; emailSubmitBtn.textContent=authMode==='create'?'Create Account':'Sign In'; }
+  });
+
+  forgotPasswordBtn.addEventListener('click',async()=>{
+    clearAuthMessage(); const email=authEmail.value.trim();
+    if(!email){ authMessage('Enter your email address first, then click “Forgot password?”.'); authEmail.focus(); return; }
+    try{ await window.firebaseAuthAPI.resetPassword(email); authMessage('Password reset email sent. Check your inbox.'); }
+    catch(e){ console.error(e); authMessage(firebaseAuthError(e)); }
+  });
+
+  document.getElementById('authBackBtn').addEventListener('click',()=>goto('home'));
+
+  function firebaseAuthError(e){
+    const map={
+      'auth/invalid-email':'Please enter a valid email address.',
+      'auth/missing-password':'Please enter your password.',
+      'auth/invalid-credential':'Incorrect email or password.',
+      'auth/user-not-found':'No account was found with that email.',
+      'auth/wrong-password':'Incorrect email or password.',
+      'auth/email-already-in-use':'An account already exists with that email. Try signing in instead.',
+      'auth/weak-password':'Your password must be at least 6 characters.',
+      'auth/popup-blocked':'Your browser blocked the Google sign-in popup. Allow popups and try again.',
+      'auth/operation-not-allowed':'This sign-in method is not enabled in Firebase Authentication.',
+      'auth/network-request-failed':'Network error. Check your internet connection and try again.',
+      'auth/too-many-requests':'Too many attempts. Wait a little while and try again.'
+    };
+    return map[e.code] || e.message || 'Authentication failed. Please try again.';
+  }
 
 
   const AIRCRAFT_TYPES = {
@@ -682,7 +846,7 @@
   }
 
   // ---------------- routing ----------------
-  const views = ['home','browse','upload','detail'];
+  const views = ['home','browse','upload','detail','auth'];
   function goto(view){
     if(view==='upload' && !currentUser){ showAuthStatus('Please sign in with Google before uploading.'); return; }
     currentView = view;
@@ -840,6 +1004,7 @@
   }
 
   document.getElementById('submitUploadBtn').addEventListener('click', async ()=>{
+    if(!currentUser){ goto('auth'); return; }
     const v = formValues();
     if(!v.image_url || !v.aircraft_type){
       fileErr.textContent = 'A photograph and aircraft type are required.';
