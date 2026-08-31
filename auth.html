@@ -1,9 +1,42 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Aerodynamic/Archive — Account</title>
-<style>:root{--bg:#050608;--line:rgba(255,255,255,.08);--text:#c4cdd4;--dim:rgba(196,205,212,.5);--blue:#3b82f6;--hover:#60a5fa;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:var(--font);display:flex;flex-direction:column}header{border-bottom:1px solid var(--line);padding:16px 40px}.brand{background:none;border:0;color:var(--text);font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;cursor:pointer}.brand span{color:var(--blue)}main{flex:1;display:flex;align-items:center;justify-content:center;padding:50px 20px}.card{width:100%;max-width:440px;border:1px solid var(--line);padding:42px;background:#0a0c0f}.eyebrow{font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--blue)}h1{font-size:32px;font-weight:300;margin:16px 0 10px}.sub{font-size:14px;line-height:1.6;color:var(--dim);margin-bottom:28px}.google{width:100%;padding:14px;border:1px solid var(--line);background:#fff;color:#202124;font-size:12px;text-transform:uppercase;letter-spacing:.1em;cursor:pointer}.google:disabled,.submit:disabled{opacity:.55;cursor:not-allowed}.divider{display:flex;align-items:center;gap:12px;color:var(--dim);font-size:10px;text-transform:uppercase;letter-spacing:.2em;margin:24px 0}.divider:before,.divider:after{content:'';height:1px;background:var(--line);flex:1}.field{margin-bottom:18px}.field label{display:block;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}input{width:100%;margin-top:9px;background:transparent;border:0;border-bottom:1px solid var(--line);padding:11px 0;color:var(--text);font-size:15px;outline:0}input:focus{border-color:var(--blue)}.submit{width:100%;border:0;background:var(--blue);color:#050608;padding:14px;font-size:11px;text-transform:uppercase;letter-spacing:.2em;cursor:pointer}.links{text-align:center;margin-top:20px;font-size:13px;color:var(--dim)}button.link{background:none;border:0;color:var(--blue);text-decoration:underline;cursor:pointer;font:inherit}.error{margin-top:18px;padding:12px;border:1px solid rgba(251,191,36,.3);color:#fbbf24;font-size:12px;line-height:1.5}.back{display:block;margin:24px auto 0;background:none;border:0;color:var(--dim);font-size:10px;text-transform:uppercase;letter-spacing:.25em;cursor:pointer}.back:hover,.links button:hover{color:var(--hover)}</style></head><body>
-<header><button class="brand" onclick="location.href='index.html'">AERODYNAMIC<span>/</span>ARCHIVE</button></header><main><section class="card"><div class="eyebrow">Archive Access</div><h1 id="title">Sign in</h1><div class="sub" id="sub">Sign in to upload photographs and manage your archive.</div><button class="google" id="google">Continue with Google</button><div class="divider">or</div><form id="form"><div class="field"><label>Email</label><input id="email" type="email" required autocomplete="email" placeholder="you@example.com"></div><div class="field"><label>Password</label><input id="password" type="password" required minlength="6" autocomplete="current-password" placeholder="••••••••"></div><div style="text-align:right;margin:-7px 0 17px"><button class="link" id="forgot" type="button" style="font-size:11px">Forgot password?</button></div><button class="submit" id="submit">Sign In</button></form><div class="links" id="switch">Don't have an account? <button class="link" type="button">Create one</button></div><div class="error" id="error" hidden></div><button class="back" onclick="location.href='index.html'">Back to archive</button></section></main>
+<style>:root{--bg:#050608;--line:rgba(255,255,255,.08);--text:#c4cdd4;--dim:rgba(196,205,212,.5);--blue:#3b82f6;--hover:#60a5fa;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:var(--font);display:flex;flex-direction:column}header{border-bottom:1px solid var(--line);padding:16px 40px}.brand{background:none;border:0;color:var(--text);font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;cursor:pointer}.brand span{color:var(--blue)}main{flex:1;display:flex;align-items:center;justify-content:center;padding:50px 20px}.card{width:100%;max-width:440px;border:1px solid var(--line);padding:42px;background:#0a0c0f}.eyebrow{font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--blue)}h1{font-size:32px;font-weight:300;margin:16px 0 10px}.sub{font-size:14px;line-height:1.6;color:var(--dim);margin-bottom:28px}.google{width:100%;padding:14px;border:1px solid var(--line);background:#fff;color:#202124;font-size:12px;text-transform:uppercase;letter-spacing:.1em;cursor:pointer}.google:disabled,.submit:disabled{opacity:.55;cursor:not-allowed}.divider{display:flex;align-items:center;gap:12px;color:var(--dim);font-size:10px;text-transform:uppercase;letter-spacing:.2em;margin:24px 0}.divider:before,.divider:after{content:'';height:1px;background:var(--line);flex:1}.field{margin-bottom:18px}.field label{display:block;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}input{width:100%;margin-top:9px;background:transparent;border:0;border-bottom:1px solid var(--line);padding:11px 0;color:var(--text);font-size:15px;outline:0}input:focus{border-color:var(--blue)}.submit{width:100%;border:0;background:var(--blue);color:#050608;padding:14px;font-size:11px;text-transform:uppercase;letter-spacing:.2em;cursor:pointer}.links{text-align:center;margin-top:20px;font-size:13px;color:var(--dim)}button.link{background:none;border:0;color:var(--blue);text-decoration:underline;cursor:pointer;font:inherit}.error{margin-top:18px;padding:12px;border:1px solid rgba(251,191,36,.3);color:#fbbf24;font-size:12px;line-height:1.5}.back{display:block;margin:24px auto 0;background:none;border:0;color:var(--dim);font-size:10px;text-transform:uppercase;letter-spacing:.25em;cursor:pointer}.back:hover,.links button:hover{color:var(--hover)}.hidden{display:none!important}.loading-row{display:flex;align-items:center;gap:10px;color:var(--dim);font-size:13px}.spin{width:14px;height:14px;border:2px solid rgba(255,255,255,.15);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.avatar-lg{width:56px;height:56px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--blue);background:rgba(59,130,246,.06);margin-bottom:18px}.outline-btn{width:100%;border:1px solid var(--line);background:transparent;color:var(--dim);padding:13px 18px;font-size:11px;text-transform:uppercase;letter-spacing:.15em;cursor:pointer;margin-top:12px}.outline-btn:hover{border-color:rgba(59,130,246,.5);color:var(--blue)}</style></head><body>
+<header><button class="brand" onclick="location.href='index.html'">AERODYNAMIC<span>/</span>ARCHIVE</button></header>
+<main>
+
+  <section class="card" id="loadingCard">
+    <div class="loading-row"><span class="spin"></span> Checking your session…</div>
+  </section>
+
+  <section class="card hidden" id="alreadyCard">
+    <div class="avatar-lg" id="alreadyAvatar">A</div>
+    <div class="eyebrow">Already Signed In</div>
+    <h1 id="alreadyName">—</h1>
+    <div class="sub" id="alreadyEmail"></div>
+    <button class="google" id="continueBtn" style="background:var(--blue);color:#050608;border:0;">Continue to Archive</button>
+    <button class="outline-btn" id="switchAccountBtn">Sign Out &amp; Use a Different Account</button>
+  </section>
+
+  <section class="card hidden" id="authCard">
+    <div class="eyebrow">Archive Access</div>
+    <h1 id="title">Sign in</h1>
+    <div class="sub" id="sub">Sign in to upload photographs and manage your archive.</div>
+    <button class="google" id="google">Continue with Google</button>
+    <div class="divider">or</div>
+    <form id="form">
+      <div class="field"><label>Email</label><input id="email" type="email" required autocomplete="email" placeholder="you@example.com"></div>
+      <div class="field"><label>Password</label><input id="password" type="password" required minlength="6" autocomplete="current-password" placeholder="••••••••"></div>
+      <div style="text-align:right;margin:-7px 0 17px"><button class="link" id="forgot" type="button" style="font-size:11px">Forgot password?</button></div>
+      <button class="submit" id="submit">Sign In</button>
+    </form>
+    <div class="links" id="switch">Don't have an account? <button class="link" type="button">Create one</button></div>
+    <div class="error" id="error" hidden></div>
+    <button class="back" onclick="location.href='index.html'">Back to archive</button>
+  </section>
+
+</main>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-import {getAuth,GoogleAuthProvider,signInWithPopup,createUserWithEmailAndPassword,signInWithEmailAndPassword,sendPasswordResetEmail,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,createUserWithEmailAndPassword,signInWithEmailAndPassword,sendPasswordResetEmail,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 const firebaseConfig={apiKey:"AIzaSyCetqc0Yf9HmT_mrnZi34QqX-pIkQ23lUc",authDomain:"aerodynamic-archive.firebaseapp.com",projectId:"aerodynamic-archive",storageBucket:"aerodynamic-archive.firebasestorage.app",messagingSenderId:"497229791567",appId:"1:497229791567:web:ba017dc034996a1feb853a",measurementId:"G-9D83VPYR6Z"};
 const app=initializeApp(firebaseConfig),auth=getAuth(app),provider=new GoogleAuthProvider();
 const $=id=>document.getElementById(id), error=$('error'); let mode='signin';
@@ -13,5 +46,41 @@ function render(){let c=mode==='create';$('title').textContent=c?'Create your ac
 $('google').onclick=async()=>{clear();$('google').disabled=true;$('google').textContent='Signing in…';try{await signInWithPopup(auth,provider);location.href='index.html'}catch(e){console.error(e);msg(friendly(e));$('google').disabled=false;$('google').textContent='Continue with Google'}};
 $('form').onsubmit=async e=>{e.preventDefault();clear();$('submit').disabled=true;let email=$('email').value.trim(),pass=$('password').value;try{if(mode==='create')await createUserWithEmailAndPassword(auth,email,pass);else await signInWithEmailAndPassword(auth,email,pass);location.href='index.html'}catch(e){console.error(e);msg(friendly(e));$('submit').disabled=false}};
 $('forgot').onclick=async()=>{clear();let email=$('email').value.trim();if(!email){msg('Enter your email address first.');return}try{await sendPasswordResetEmail(auth,email);msg('Password reset email sent. Check your inbox.')}catch(e){msg(friendly(e))}};
-onAuthStateChanged(auth,user=>{if(user) location.href='index.html'}); render();
+
+function showAlready(user){
+  const name = user.displayName || (user.email ? user.email.split('@')[0] : 'Account');
+  $('alreadyName').textContent = name;
+  $('alreadyEmail').textContent = user.email || '';
+  $('alreadyAvatar').textContent = name.charAt(0).toUpperCase();
+  $('loadingCard').classList.add('hidden');
+  $('authCard').classList.add('hidden');
+  $('alreadyCard').classList.remove('hidden');
+}
+function showAuthForm(){
+  $('loadingCard').classList.add('hidden');
+  $('alreadyCard').classList.add('hidden');
+  $('authCard').classList.remove('hidden');
+}
+
+$('continueBtn').onclick = () => { location.href = 'index.html'; };
+$('switchAccountBtn').onclick = async () => {
+  $('switchAccountBtn').disabled = true;
+  $('switchAccountBtn').textContent = 'Signing out…';
+  try{
+    await signOut(auth);
+    showAuthForm();
+  }catch(e){
+    console.error(e);
+    $('switchAccountBtn').disabled = false;
+    $('switchAccountBtn').textContent = 'Sign Out & Use a Different Account';
+  }
+};
+
+let resolved = false;
+onAuthStateChanged(auth, user => {
+  resolved = true;
+  if(user) showAlready(user);
+  else showAuthForm();
+});
+render();
 </script></body></html>
