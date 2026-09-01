@@ -35,9 +35,11 @@
   }
   .header-inner{
     max-width:1600px;margin:0 auto;
-    display:flex;align-items:center;justify-content:space-between;
+    display:flex;align-items:center;gap:24px;
     padding:16px 40px;
   }
+  .header-inner .brand{flex-shrink:0;}
+  .header-inner .submit-btn{flex-shrink:0;}
   .brand{display:flex;align-items:center;gap:10px;background:none;border:none;padding:0;}
   .brand svg{width:16px;height:16px;color:var(--blue);flex-shrink:0;}
   .brand-text{
@@ -48,15 +50,19 @@
     color:var(--text);
   }
   .brand-text .slash{color:var(--blue);}
-  nav.mainnav{display:flex;gap:32px;align-items:center;}
-  .navlink{
-    background:none;border:none;
-    font-size:11px;text-transform:uppercase;letter-spacing:.2em;
-    color:var(--text-dimmer);
-    padding:0;transition:color .15s;
+  .header-search-wrap{
+    position:relative;flex:1;max-width:520px;
   }
-  .navlink:hover{color:rgba(196,205,212,0.8);}
-  .navlink.active{color:var(--blue);}
+  .header-search-icon{
+    position:absolute;left:0;top:50%;transform:translateY(-50%);
+    width:15px;height:15px;color:var(--text-dimmer);pointer-events:none;
+  }
+  .header-search{
+    width:100%;background:transparent;border:none;border-bottom:1px solid var(--line-2);
+    padding:8px 0 8px 24px;font-size:14px;color:var(--text);outline:none;transition:border-color .15s;
+  }
+  .header-search::placeholder{color:rgba(196,205,212,0.3);}
+  .header-search:focus{border-color:var(--blue);}
   .submit-btn{
     display:flex;align-items:center;gap:8px;
     border:1px solid rgba(59,130,246,0.5);
@@ -68,21 +74,15 @@
   .submit-btn svg{width:14px;height:14px;}
 
   /* ---------- account ---------- */
-  .account-wrap{position:relative;}
-  .account-btn{display:flex;align-items:center;gap:9px;background:transparent;color:var(--text);border:1px solid var(--line-2);padding:7px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.15em;transition:border-color .15s,background .15s;}
-  .account-btn:hover{border-color:rgba(59,130,246,.55);background:rgba(59,130,246,.06);}
-  .account-chevron{width:12px;height:12px;color:var(--text-dimmer);}
-  .account-menu{position:absolute;right:0;top:calc(100% + 10px);width:230px;padding:12px;background:#0a0c0f;border:1px solid var(--line-2);box-shadow:0 18px 45px rgba(0,0,0,.45);z-index:100;}
-  .account-menu.hidden{display:none;}
-  .account-info{padding:10px 10px 14px;border-bottom:1px solid var(--line);cursor:pointer;transition:opacity .15s;}
-  .account-info:hover{opacity:.8;}
-  .account-info strong{display:block;font-size:13px;font-weight:400;color:var(--text);}
-  .account-info span{display:block;margin-top:5px;font-size:11px;color:var(--text-dimmer);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .account-menu-btn{width:100%;margin-top:10px;border:1px solid var(--line-2);background:transparent;color:var(--text-dim);padding:10px 12px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.2em;}
-  .account-menu-btn:hover{border-color:rgba(59,130,246,.45);color:var(--blue);}
+  .account-btn{
+    display:flex;align-items:center;gap:9px;background:transparent;color:var(--text);
+    border:1px solid var(--line-2);padding:8px 14px;font-size:11px;text-transform:uppercase;letter-spacing:.15em;
+    transition:border-color .15s,background .15s;flex-shrink:0;
+  }
+  .account-btn:hover{border-color:rgba(59,130,246,.55);background:rgba(59,130,246,.06);color:var(--blue);}
   .auth-status{position:fixed;right:24px;bottom:24px;z-index:200;padding:12px 16px;background:#0a0c0f;border:1px solid var(--line-2);font-size:12px;color:var(--text);box-shadow:0 15px 40px rgba(0,0,0,.4);}
   .auth-status.error{color:var(--amber);}
-  @media (max-width:900px){.account-menu{right:-10px;}}
+  @media (max-width:900px){.header-search-wrap{display:none;}}
 
   /* ---------- page header (no hero image) ---------- */
   .pagehead{
@@ -285,7 +285,6 @@
   .hidden{display:none !important;}
 
   @media (max-width:900px){
-    nav.mainnav{display:none;}
     .header-inner{padding:14px 20px;}
     .pagehead{padding:40px 20px;}
     .section{padding:56px 20px;}
@@ -316,23 +315,13 @@
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
       <span class="brand-text">Aerodynamic<span class="slash">/</span>Archive</span>
     </button>
-    <nav class="mainnav">
-      <button class="navlink active" data-view="browse">Search</button>
-    </nav>
-    <div class="account-wrap">
-      <button class="account-btn" id="accountBtn" type="button">
-        <span id="accountLabel">Sign In</span>
-        <svg class="account-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 9 6 6 6-6"/></svg>
-      </button>
-      <div class="account-menu hidden" id="accountMenu">
-        <div class="account-info" id="accountInfo" title="View profile">
-          <strong id="accountName">Not signed in</strong>
-          <span id="accountEmail">Sign in with Google to create your account.</span>
-        </div>
-        <button class="account-menu-btn hidden" id="viewProfileBtn" type="button">View Profile</button>
-        <button class="account-menu-btn hidden" id="signOutBtn" type="button">Sign Out</button>
-      </div>
+    <div class="header-search-wrap">
+      <svg class="header-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" class="header-search" id="headerSearch" placeholder="Search registration, operator, type, ICAO…">
     </div>
+    <button class="account-btn" id="accountBtn" type="button">
+      <span id="accountLabel">Sign In</span>
+    </button>
     <button class="submit-btn" data-view="upload">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 16.5V19a2 2 0 002 2h12a2 2 0 002-2v-2.5M7 9l5-5 5 5M12 4v13"/></svg>
       Upload
@@ -496,6 +485,7 @@
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
   window.firebaseAuthAPI = { auth, signInGoogle: () => signInWithPopup(auth, provider), signOut: () => signOut(auth), onChange: cb => onAuthStateChanged(auth, cb) };
+  window.dispatchEvent(new CustomEvent('firebaseAuthReady'));
 </script>
 
 <script>
@@ -509,37 +499,25 @@
 
   // ---------------- authentication ----------------
   const accountBtn = document.getElementById('accountBtn');
-  const accountMenu = document.getElementById('accountMenu');
   const accountLabel = document.getElementById('accountLabel');
-  const accountName = document.getElementById('accountName');
-  const accountEmail = document.getElementById('accountEmail');
-  const accountInfo = document.getElementById('accountInfo');
-  const viewProfileBtn = document.getElementById('viewProfileBtn');
-  const signOutBtn = document.getElementById('signOutBtn');
   function showAuthStatus(message,isError=false){ const old=document.querySelector('.auth-status'); if(old) old.remove(); const el=document.createElement('div'); el.className='auth-status'+(isError?' error':''); el.textContent=message; document.body.appendChild(el); setTimeout(()=>el.remove(),4500); }
   function updateAccountUI(user){
     currentUser = user||null;
     if(user){
       const name = user.displayName || user.email?.split('@')[0] || 'Account';
       accountLabel.textContent = name;
-      accountName.textContent = name;
-      accountEmail.textContent = user.email || '';
-      viewProfileBtn.classList.remove('hidden');
-      signOutBtn.classList.remove('hidden');
     } else {
       accountLabel.textContent = 'Sign In';
-      accountName.textContent = 'Not signed in';
-      accountEmail.textContent = 'Sign in to upload photographs.';
-      viewProfileBtn.classList.add('hidden');
-      signOutBtn.classList.add('hidden');
     }
   }
-  accountBtn.addEventListener('click',()=>{ if(currentUser) accountMenu.classList.toggle('hidden'); else window.location.href='auth.html'; });
-  accountInfo.addEventListener('click', ()=>{ if(currentUser) window.location.href='profile.html'; });
-  viewProfileBtn.addEventListener('click', ()=>{ window.location.href='profile.html'; });
-  signOutBtn.addEventListener('click',async()=>{ try{await window.firebaseAuthAPI.signOut(); accountMenu.classList.add('hidden'); showAuthStatus('Signed out.');}catch(e){console.error(e);showAuthStatus('Could not sign out. Please try again.',true);} });
-  document.addEventListener('click',e=>{if(!e.target.closest('.account-wrap')) accountMenu.classList.add('hidden');});
-  window.firebaseAuthAPI.onChange(updateAccountUI);
+  accountBtn.addEventListener('click', ()=>{
+    window.location.href = currentUser ? 'profile.html' : 'auth.html';
+  });
+  if(window.firebaseAuthAPI){
+    window.firebaseAuthAPI.onChange(updateAccountUI);
+  } else {
+    window.addEventListener('firebaseAuthReady', ()=> window.firebaseAuthAPI.onChange(updateAccountUI));
+  }
 
   const AIRCRAFT_TYPES = {
     'General Aviation': [
@@ -752,6 +730,17 @@
   document.getElementById('browseSearch').addEventListener('input', e=>{ browseFilters.q = e.target.value; renderBrowse(); });
   document.getElementById('filterAirline').addEventListener('change', e=>{ browseFilters.airline = e.target.value; renderBrowse(); });
   document.getElementById('filterType').addEventListener('change', e=>{ browseFilters.type = e.target.value; renderBrowse(); });
+
+  // ---------------- header search ----------------
+  const headerSearch = document.getElementById('headerSearch');
+  function runHeaderSearch(){
+    browseFilters.q = headerSearch.value;
+    document.getElementById('browseSearch').value = headerSearch.value;
+    if(currentView !== 'browse') goto('browse');
+    else renderBrowse();
+  }
+  headerSearch.addEventListener('input', runHeaderSearch);
+  headerSearch.addEventListener('keydown', e=>{ if(e.key === 'Enter') runHeaderSearch(); });
 
   // ---------------- upload page ----------------
   const fieldGrid = document.getElementById('fieldGrid');
