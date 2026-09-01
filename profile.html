@@ -167,6 +167,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
       Back to Archive
     </button>
+    <button class="back-link" id="signOutBtn" style="margin-left:20px;">Sign Out</button>
   </div>
 </header>
 
@@ -228,7 +229,7 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+  import { getAuth, onAuthStateChanged, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCetqc0Yf9HmT_mrnZi34QqX-pIkQ23lUc",
@@ -246,7 +247,9 @@
   window.profileAuthAPI = {
     onChange: (cb) => onAuthStateChanged(auth, cb),
     updateDisplayName: (name) => updateProfile(auth.currentUser, { displayName: name }),
+    signOut: () => signOut(auth),
   };
+  window.dispatchEvent(new CustomEvent('profileAuthReady'));
 </script>
 
 <script>
@@ -361,7 +364,14 @@
   });
 
   // ---------------- init ----------------
-  window.profileAuthAPI.onChange(async (user)=>{
+  document.getElementById('signOutBtn').addEventListener('click', async ()=>{
+    try{
+      await window.profileAuthAPI.signOut();
+      location.href = 'index.html';
+    }catch(e){ console.error(e); }
+  });
+
+  async function handleAuthChange(user){
     if(!user){
       location.href = 'auth.html?return=profile';
       return;
@@ -379,7 +389,13 @@
 
     document.getElementById('loadingState').classList.add('hidden');
     document.getElementById('profileContent').classList.remove('hidden');
-  });
+  }
+
+  if(window.profileAuthAPI){
+    window.profileAuthAPI.onChange(handleAuthChange);
+  } else {
+    window.addEventListener('profileAuthReady', ()=> window.profileAuthAPI.onChange(handleAuthChange));
+  }
 })();
 </script>
 </body>
