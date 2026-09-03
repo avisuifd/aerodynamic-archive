@@ -73,6 +73,9 @@
   }
   .profile-main{flex:1;min-width:240px;}
   .name-row{display:flex;flex-wrap:wrap;align-items:center;gap:14px;}
+  .role-badge{font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.15em;padding:3px 8px;border:1px solid var(--line-2);color:var(--text-dimmer);}
+  .role-badge.owner{color:var(--amber);border-color:rgba(251,191,36,.35);}
+  .role-badge.screener{color:var(--blue);border-color:rgba(59,130,246,.4);}
   .name-display{font-size:26px;font-weight:300;color:var(--text);}
   .edit-name-btn{
     border:1px solid var(--line-2);background:transparent;color:var(--text-dim);
@@ -183,6 +186,7 @@
       <div class="profile-main">
         <div class="name-row" id="nameRow">
           <div class="name-display" id="nameDisplay">—</div>
+          <span class="role-badge hidden" id="roleBadge"></span>
           <button class="edit-name-btn" id="editNameBtn">Edit Name</button>
         </div>
         <div class="email-line" id="emailLine"></div>
@@ -228,47 +232,13 @@
 </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyCetqc0Yf9HmT_mrnZi34QqX-pIkQ23lUc",
-    authDomain: "aerodynamic-archive.firebaseapp.com",
-    projectId: "aerodynamic-archive",
-    storageBucket: "aerodynamic-archive.firebasestorage.app",
-    messagingSenderId: "497229791567",
-    appId: "1:497229791567:web:ba017dc034996a1feb853a",
-    measurementId: "G-9D83VPYR6Z"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  window.profileAuthAPI = {
-    onChange: (cb) => onAuthStateChanged(auth, cb),
-    updateDisplayName: (name) => updateProfile(auth.currentUser, { displayName: name }),
-    signOut: () => signOut(auth),
-  };
-  window.dispatchEvent(new CustomEvent('profileAuthReady'));
-</script>
-
-<script>
-(function(){
-  const STORAGE_LIST_KEY = 'aa:ids';
+(async function(){
+  const { auth } = await import('./firebase-config.js');
+  const { onAuthStateChanged, updateProfile, signOut } = await import("https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js");
+  const { ensureUserDoc, reserveDisplayName } = await import('./roles.js');
+  const { fetchAllPhotos } = await import('./photos.js');
 
   function esc(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
-
-  async function fetchAllPhotos(){
-    try{
-      const listRes = await window.storage.get(STORAGE_LIST_KEY, true);
-      const ids = JSON.parse(listRes.value);
-      const out = [];
-      for(const id of ids){
-        try{ const r = await window.storage.get('aa:photo:'+id, true); out.push(JSON.parse(r.value)); }catch(e){}
-      }
-      return out.sort((a,b)=>b.created_date - a.created_date);
-    }catch(e){ return []; }
-  }
 
   function cardHTML(p){
     return `
@@ -315,7 +285,6 @@
   }
 
   // ---------------- name editing ----------------
-  const nameRow = document.getElementById('nameRow');
   const nameEditRow = document.getElementById('nameEditRow');
   const nameDisplay = document.getElementById('nameDisplay');
   const nameInput = document.getElementById('nameInput');
@@ -342,22 +311,28 @@
     if(!newName){
       nameStatus.textContent = 'Display name can\'t be empty.';
       nameStatus.className = 'name-status err';
+      nameStatus.classList.remove('hidden');
       return;
     }
     saveNameBtn.disabled = true;
     saveNameBtn.textContent = 'Saving…';
     try{
-      await window.profileAuthAPI.updateDisplayName(newName);
+      // Reserves the name in Firestore (fails if someone else already has it),
+      // then mirrors it onto the Firebase Auth profile for consistency.
+      await reserveDisplayName(currentUser, newName);
+      await updateProfile(auth.currentUser, { displayName: newName });
       nameDisplay.textContent = newName;
       document.getElementById('avatarInitial').textContent = newName.charAt(0).toUpperCase();
       nameEditRow.classList.remove('show');
       nameStatus.textContent = 'Display name updated.';
       nameStatus.className = 'name-status ok';
+      nameStatus.classList.remove('hidden');
       setTimeout(()=> nameStatus.classList.add('hidden'), 3000);
     }catch(e){
       console.error(e);
-      nameStatus.textContent = 'Could not update your name. Please try again.';
+      nameStatus.textContent = e.message || 'Could not update your name. Please try again.';
       nameStatus.className = 'name-status err';
+      nameStatus.classList.remove('hidden');
     }
     saveNameBtn.disabled = false;
     saveNameBtn.textContent = 'Save';
@@ -366,21 +341,32 @@
   // ---------------- init ----------------
   document.getElementById('signOutBtn').addEventListener('click', async ()=>{
     try{
-      await window.profileAuthAPI.signOut();
+      await signOut(auth);
       location.href = 'index.html';
     }catch(e){ console.error(e); }
   });
 
-  async function handleAuthChange(user){
+  onAuthStateChanged(auth, async (user)=>{
     if(!user){
       location.href = 'auth.html?return=profile';
       return;
     }
     currentUser = user;
-    const name = user.displayName || (user.email ? user.email.split('@')[0] : 'Pilot');
+    const userDoc = await ensureUserDoc(user);
+    const name = userDoc.displayName || user.displayName || (user.email ? user.email.split('@')[0] : 'Pilot');
     nameDisplay.textContent = name;
     document.getElementById('avatarInitial').textContent = name.charAt(0).toUpperCase();
     document.getElementById('emailLine').textContent = user.email || '';
+
+    const roleBadge = document.getElementById('roleBadge');
+    if(userDoc.role === 'owner' || userDoc.role === 'screener'){
+      roleBadge.textContent = userDoc.role === 'owner' ? 'Owner' : 'Screener';
+      roleBadge.classList.remove('hidden');
+      roleBadge.classList.toggle('owner', userDoc.role === 'owner');
+      roleBadge.classList.toggle('screener', userDoc.role === 'screener');
+    } else {
+      roleBadge.classList.add('hidden');
+    }
 
     const allPhotos = await fetchAllPhotos();
     const myPhotos = allPhotos.filter(p => p.user_id === user.uid);
@@ -389,13 +375,7 @@
 
     document.getElementById('loadingState').classList.add('hidden');
     document.getElementById('profileContent').classList.remove('hidden');
-  }
-
-  if(window.profileAuthAPI){
-    window.profileAuthAPI.onChange(handleAuthChange);
-  } else {
-    window.addEventListener('profileAuthReady', ()=> window.profileAuthAPI.onChange(handleAuthChange));
-  }
+  });
 })();
 </script>
 </body>
