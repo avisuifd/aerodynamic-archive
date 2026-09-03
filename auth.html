@@ -35,16 +35,16 @@
 
 </main>
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,createUserWithEmailAndPassword,signInWithEmailAndPassword,sendPasswordResetEmail,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-const firebaseConfig={apiKey:"AIzaSyCetqc0Yf9HmT_mrnZi34QqX-pIkQ23lUc",authDomain:"aerodynamic-archive.firebaseapp.com",projectId:"aerodynamic-archive",storageBucket:"aerodynamic-archive.firebasestorage.app",messagingSenderId:"497229791567",appId:"1:497229791567:web:ba017dc034996a1feb853a",measurementId:"G-9D83VPYR6Z"};
-const app=initializeApp(firebaseConfig),auth=getAuth(app),provider=new GoogleAuthProvider();
+import {auth} from "./firebase-config.js";
+import {GoogleAuthProvider,signInWithPopup,signOut,createUserWithEmailAndPassword,signInWithEmailAndPassword,sendPasswordResetEmail,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+import {ensureUserDoc} from "./roles.js";
+const provider=new GoogleAuthProvider();
 const $=id=>document.getElementById(id), error=$('error'); let mode='signin';
 function msg(x){error.textContent=x;error.hidden=false} function clear(){error.hidden=true}
 function friendly(e){return ({'auth/invalid-email':'Enter a valid email address.','auth/invalid-credential':'Incorrect email or password.','auth/email-already-in-use':'An account already exists with that email. Try signing in.','auth/weak-password':'Password must be at least 6 characters.','auth/popup-blocked':'Your browser blocked the Google popup. Allow popups and try again.','auth/operation-not-allowed':'Enable this sign-in method in Firebase Authentication.','auth/network-request-failed':'Network error. Check your connection.','auth/too-many-requests':'Too many attempts. Please wait and try again.'}[e.code]||e.message||'Authentication failed.');}
 function render(){let c=mode==='create';$('title').textContent=c?'Create your account':'Sign in';$('sub').textContent=c?'Create an Aerodynamic/Archive account with Google or email and password.':'Sign in to upload photographs and manage your archive.';$('submit').textContent=c?'Create Account':'Sign In';$('forgot').style.display=c?'none':'inline';$('switch').innerHTML=c?'Already have an account? <button class="link" type="button">Sign in</button>':'Don\'t have an account? <button class="link" type="button">Create one</button>';$('switch').querySelector('button').onclick=()=>{mode=c?'signin':'create';clear();render()};$('password').autocomplete=c?'new-password':'current-password'}
-$('google').onclick=async()=>{clear();$('google').disabled=true;$('google').textContent='Signing in…';try{await signInWithPopup(auth,provider);location.href='index.html'}catch(e){console.error(e);msg(friendly(e));$('google').disabled=false;$('google').textContent='Continue with Google'}};
-$('form').onsubmit=async e=>{e.preventDefault();clear();$('submit').disabled=true;let email=$('email').value.trim(),pass=$('password').value;try{if(mode==='create')await createUserWithEmailAndPassword(auth,email,pass);else await signInWithEmailAndPassword(auth,email,pass);location.href='index.html'}catch(e){console.error(e);msg(friendly(e));$('submit').disabled=false}};
+$('google').onclick=async()=>{clear();$('google').disabled=true;$('google').textContent='Signing in…';try{const cred=await signInWithPopup(auth,provider);await ensureUserDoc(cred.user);location.href='index.html'}catch(e){console.error(e);msg(friendly(e));$('google').disabled=false;$('google').textContent='Continue with Google'}};
+$('form').onsubmit=async e=>{e.preventDefault();clear();$('submit').disabled=true;let email=$('email').value.trim(),pass=$('password').value;try{let cred;if(mode==='create')cred=await createUserWithEmailAndPassword(auth,email,pass);else cred=await signInWithEmailAndPassword(auth,email,pass);await ensureUserDoc(cred.user);location.href='index.html'}catch(e){console.error(e);msg(friendly(e));$('submit').disabled=false}};
 $('forgot').onclick=async()=>{clear();let email=$('email').value.trim();if(!email){msg('Enter your email address first.');return}try{await sendPasswordResetEmail(auth,email);msg('Password reset email sent. Check your inbox.')}catch(e){msg(friendly(e))}};
 
 function showAlready(user){
@@ -77,9 +77,9 @@ $('switchAccountBtn').onclick = async () => {
 };
 
 let resolved = false;
-onAuthStateChanged(auth, user => {
+onAuthStateChanged(auth, async user => {
   resolved = true;
-  if(user) showAlready(user);
+  if(user){ try{ await ensureUserDoc(user); }catch(e){ console.error(e); } showAlready(user); }
   else showAuthForm();
 });
 render();
