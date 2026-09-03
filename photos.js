@@ -6,7 +6,7 @@
 
 import { db } from './firebase-config.js';
 import {
-  collection, addDoc, updateDoc, doc, getDocs, query, orderBy,
+  collection, addDoc, updateDoc, deleteDoc, doc, getDocs, query, orderBy,
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const MAX_INPUT_BYTES = 20 * 1024 * 1024; // reject absurdly large source files
@@ -83,4 +83,8 @@ export async function fetchAllPhotos() {
 
 export async function bumpViews(photoId, newViewCount) {
   await updateDoc(doc(db, 'photos', photoId), { views: newViewCount });
+}
+
+export async function deletePhoto(photoId) {
+  await deleteDoc(doc(db, 'photos', photoId));
 }
