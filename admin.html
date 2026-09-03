@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aerodynamic/Archive — Admin</title>
+<style>
+  :root{
+    --bg:#050608;
+    --line:rgba(255,255,255,0.06);
+    --line-2:rgba(255,255,255,0.09);
+    --text:#c4cdd4;
+    --text-dim:rgba(196,205,212,0.5);
+    --text-dimmer:rgba(196,205,212,0.35);
+    --blue:#3b82f6;
+    --blue-hover:#60a5fa;
+    --amber:#fbbf24;
+    --red:#f87171;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'Consolas', 'SFMono-Regular', Menlo, monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--font);}
+  body{min-height:100vh;font-weight:300;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:var(--font);cursor:pointer;}
+  .hidden{display:none !important;}
+
+  header{position:sticky;top:0;z-index:50;background:rgba(5,6,8,0.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);}
+  .header-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;}
+  .brand{display:flex;align-items:center;gap:10px;background:none;border:none;padding:0;}
+  .brand svg{width:16px;height:16px;color:var(--blue);flex-shrink:0;}
+  .brand-text{border:1px solid var(--line-2);padding:5px 10px;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.2em;color:var(--text);}
+  .brand-text .slash{color:var(--blue);}
+  .header-links{display:flex;align-items:center;gap:10px;}
+  .back-link{display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--line-2);padding:8px 14px;font-size:11px;text-transform:uppercase;letter-spacing:.18em;color:var(--text-dimmer);transition:color .15s,border-color .15s;}
+  .back-link:hover{color:var(--blue);border-color:rgba(59,130,246,.45);}
+  .back-link svg{width:13px;height:13px;}
+
+  .wrap{max-width:1400px;margin:0 auto;padding:56px 40px 100px;}
+  .eyebrow{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.4em;color:var(--amber);}
+  h1{margin:20px 0 0;font-size:clamp(26px,4vw,40px);font-weight:300;color:var(--text);}
+  .sub{margin:14px 0 0;max-width:600px;font-size:15px;line-height:1.6;color:var(--text-dim);}
+
+  .stats-row{display:flex;gap:1px;flex-wrap:wrap;margin-top:44px;background:var(--line);border:1px solid var(--line);}
+  .stat-box{flex:1;min-width:150px;background:var(--bg);padding:22px 24px;}
+  .stat-num{font-size:30px;font-weight:300;color:var(--text);}
+  .stat-label{margin-top:6px;font-size:10px;text-transform:uppercase;letter-spacing:.25em;color:var(--text-dimmer);}
+
+  .section-heading{max-width:700px;margin:64px 0 32px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+  .section-heading h2{margin:14px 0 0;font-size:24px;font-weight:300;line-height:1.15;color:var(--text);}
+  .section-heading p{margin:12px 0 0;font-size:14px;line-height:1.6;color:var(--text-dim);}
+  .people-btn{border:1px solid rgba(59,130,246,.45);background:transparent;color:var(--blue);padding:11px 20px;font-size:11px;text-transform:uppercase;letter-spacing:.2em;transition:background .15s;flex-shrink:0;}
+  .people-btn:hover{background:rgba(59,130,246,.1);}
+
+  .search-row{position:relative;max-width:440px;margin-bottom:28px;}
+  .search-icon{position:absolute;left:0;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--text-dimmer);}
+  .search-input{width:100%;background:transparent;border:none;border-bottom:1px solid var(--line-2);padding:10px 0 10px 26px;font-size:15px;color:var(--text);outline:none;transition:border-color .2s;}
+  .search-input:focus{border-color:var(--blue);}
+  .search-input::placeholder{color:rgba(196,205,212,0.3);}
+
+  .photo-row{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--line);}
+  .photo-thumb{width:72px;height:54px;flex-shrink:0;object-fit:cover;background:#000;border:1px solid var(--line-2);}
+  .photo-main{flex:1;min-width:0;}
+  .photo-title{font-size:14px;color:var(--text);}
+  .photo-sub{margin-top:4px;font-size:12px;color:var(--text-dimmer);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .photo-actions{display:flex;gap:10px;flex-shrink:0;}
+  .view-btn{border:1px solid var(--line-2);background:transparent;color:var(--text-dim);padding:8px 14px;font-size:10px;text-transform:uppercase;letter-spacing:.15em;transition:border-color .15s,color .15s;}
+  .view-btn:hover{border-color:rgba(59,130,246,.5);color:var(--blue);}
+  .delete-btn{border:1px solid rgba(248,113,113,.35);background:transparent;color:var(--red);padding:8px 14px;font-size:10px;text-transform:uppercase;letter-spacing:.15em;transition:background .15s;}
+  .delete-btn:hover{background:rgba(248,113,113,.1);}
+  .delete-btn:disabled{opacity:.5;cursor:not-allowed;}
+
+  .empty-line{margin-top:20px;font-size:14px;color:var(--text-dim);}
+  .loading-row{display:flex;align-items:center;gap:10px;color:var(--text-dim);font-size:13px;padding:30px 0;}
+  .spin{width:14px;height:14px;border:2px solid rgba(255,255,255,0.15);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .denied-card{max-width:440px;margin:80px auto;border:1px solid var(--line);padding:36px;text-align:center;}
+  .denied-card p{font-size:14px;color:var(--text-dim);line-height:1.6;}
+
+  @media (max-width:700px){
+    .header-inner{padding:14px 20px;}
+    .wrap{padding:40px 20px 80px;}
+    .photo-row{flex-wrap:wrap;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <button class="brand" onclick="location.href='index.html'">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+      <span class="brand-text">Aerodynamic<span class="slash">/</span>Archive</span>
+    </button>
+    <div class="header-links">
+      <button class="back-link" onclick="location.href='people.html'">People</button>
+      <button class="back-link" onclick="location.href='index.html'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+        Back to Archive
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="loadingState" class="loading-row"><span class="spin"></span> Checking access…</div>
+
+  <div id="deniedState" class="hidden">
+    <div class="denied-card">
+      <div class="eyebrow">Restricted</div>
+      <h1 style="font-size:22px;">Admin</h1>
+      <p>This panel is limited to the archive owner.</p>
+    </div>
+  </div>
+
+  <div id="adminContent" class="hidden">
+    <div class="eyebrow">Administrator Panel</div>
+    <h1>Owner Console</h1>
+    <p class="sub">Site-wide stats and photo moderation. Manage roles from the People tab.</p>
+
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-num" id="statTotalPhotos">0</div><div class="stat-label">Total Photos</div></div>
+      <div class="stat-box"><div class="stat-num" id="statTotalUsers">0</div><div class="stat-label">Total Users</div></div>
+      <div class="stat-box"><div class="stat-num" id="statScreeners">0</div><div class="stat-label">Screeners</div></div>
+      <div class="stat-box"><div class="stat-num" id="statTotalViews">0</div><div class="stat-label">Total Views</div></div>
+    </div>
+
+    <div class="section-heading">
+      <div>
+        <div class="eyebrow">Moderation</div>
+        <h2>All submitted photos.</h2>
+        <p>Remove anything that shouldn't be in the archive.</p>
+      </div>
+      <button class="people-btn" onclick="location.href='people.html'">Manage Roles →</button>
+    </div>
+
+    <div class="search-row">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" class="search-input" id="photoSearch" placeholder="Search by aircraft type, operator, registration, uploader…">
+    </div>
+
+    <div id="photoList"></div>
+    <p class="empty-line hidden" id="emptyState">No photos match that search.</p>
+  </div>
+</div>
+
+<script type="module">
+  import { auth } from './firebase-config.js';
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+  import { ensureUserDoc, searchUsers } from './roles.js';
+  import { fetchAllPhotos, deletePhoto } from './photos.js';
+
+  function esc(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+
+  let allPhotos = [];
+  let allUsers = [];
+
+  function renderPhotos(list){
+    const wrap = document.getElementById('photoList');
+    wrap.innerHTML = '';
+    document.getElementById('emptyState').classList.toggle('hidden', list.length>0);
+    list.forEach(p=>{
+      const row = document.createElement('div');
+      row.className = 'photo-row';
+      row.innerHTML = `
+        <img class="photo-thumb" src="${p.image_url}" alt="">
+        <div class="photo-main">
+          <div class="photo-title">${esc((p.airline||'Unmarked')+' '+(p.aircraft_type||''))}</div>
+          <div class="photo-sub">${esc(p.registration||'No reg')} · ${esc(p.icao||'No ICAO')} · uploaded by ${esc(p.uploader_name || p.uploader_email || 'unknown')}</div>
+        </div>
+        <div class="photo-actions">
+          <button class="view-btn" data-open="${esc(p.id)}">View</button>
+          <button class="delete-btn" data-delete="${esc(p.id)}">Delete</button>
+        </div>
+      `;
+      wrap.appendChild(row);
+    });
+
+    wrap.querySelectorAll('[data-open]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        location.href = 'index.html?open=' + encodeURIComponent(btn.dataset.open);
+      });
+    });
+    wrap.querySelectorAll('[data-delete]').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        if(!confirm('Delete this photo from the archive? This can\'t be undone.')) return;
+        btn.disabled = true;
+        btn.textContent = 'Deleting…';
+        try{
+          await deletePhoto(btn.dataset.delete);
+          allPhotos = allPhotos.filter(p => p.id !== btn.dataset.delete);
+          renderPhotos(filterPhotos(document.getElementById('photoSearch').value));
+          renderStats();
+        }catch(e){
+          console.error(e);
+          btn.disabled = false;
+          btn.textContent = 'Delete';
+          alert('Could not delete this photo. Please try again.');
+        }
+      });
+    });
+  }
+
+  function filterPhotos(term){
+    const t = term.trim().toLowerCase();
+    if(!t) return allPhotos;
+    return allPhotos.filter(p=>[p.airline,p.aircraft_type,p.registration,p.icao,p.uploader_name,p.uploader_email]
+      .filter(Boolean).some(v=>v.toLowerCase().includes(t)));
+  }
+
+  document.getElementById('photoSearch').addEventListener('input', (e)=>{
+    renderPhotos(filterPhotos(e.target.value));
+  });
+
+  function renderStats(){
+    document.getElementById('statTotalPhotos').textContent = allPhotos.length;
+    document.getElementById('statTotalUsers').textContent = allUsers.length;
+    document.getElementById('statScreeners').textContent = allUsers.filter(u=>u.role==='screener').length;
+    const totalViews = allPhotos.reduce((sum,p)=> sum + (p.views||0), 0);
+    document.getElementById('statTotalViews').textContent = totalViews;
+  }
+
+  onAuthStateChanged(auth, async (user)=>{
+    if(!user){
+      location.href = 'auth.html?return=admin';
+      return;
+    }
+    const userDoc = await ensureUserDoc(user);
+    document.getElementById('loadingState').classList.add('hidden');
+
+    if(userDoc.role !== 'owner'){
+      document.getElementById('deniedState').classList.remove('hidden');
+      return;
+    }
+
+    [allPhotos, allUsers] = await Promise.all([fetchAllPhotos(), searchUsers('')]);
+    renderStats();
+    renderPhotos(allPhotos);
+    document.getElementById('adminContent').classList.remove('hidden');
+  });
+</script>
+</body>
+</html>
