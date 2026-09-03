@@ -319,6 +319,8 @@
       <svg class="header-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
       <input type="text" class="header-search" id="headerSearch" placeholder="Search registration, operator, type, ICAO…">
     </div>
+    <button class="account-btn peoplelink hidden" id="peopleLink" type="button" onclick="location.href='people.html'">People</button>
+    <button class="account-btn hidden" id="adminLink" type="button" onclick="location.href='admin.html'">Admin</button>
     <button class="account-btn" id="accountBtn" type="button">
       <span id="accountLabel">Sign In</span>
     </button>
@@ -468,56 +470,46 @@
 </footer>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+(async function(){
+  const { auth } = await import('./firebase-config.js');
+  const { onAuthStateChanged, signOut } = await import("https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js");
+  const { ensureUserDoc } = await import('./roles.js');
+  const { compressImageToDataURL, createPhoto, fetchAllPhotos, bumpViews } = await import('./photos.js');
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCetqc0Yf9HmT_mrnZi34QqX-pIkQ23lUc",
-    authDomain: "aerodynamic-archive.firebaseapp.com",
-    projectId: "aerodynamic-archive",
-    storageBucket: "aerodynamic-archive.firebasestorage.app",
-    messagingSenderId: "497229791567",
-    appId: "1:497229791567:web:ba017dc034996a1feb853a",
-    measurementId: "G-9D83VPYR6Z"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const provider = new GoogleAuthProvider();
-  window.firebaseAuthAPI = { auth, signInGoogle: () => signInWithPopup(auth, provider), signOut: () => signOut(auth), onChange: cb => onAuthStateChanged(auth, cb) };
-  window.dispatchEvent(new CustomEvent('firebaseAuthReady'));
-</script>
-
-<script>
-(function(){
-  const STORAGE_LIST_KEY = 'aa:ids';
   let photos = [];
   let currentView = 'home';
   let activeId = null;
-  let pendingImage = null;
+  let pendingFile = null;
   let currentUser = null;
+  let currentRole = 'user';
 
   // ---------------- authentication ----------------
   const accountBtn = document.getElementById('accountBtn');
   const accountLabel = document.getElementById('accountLabel');
+  const peopleLink = document.getElementById('peopleLink');
+  const adminLink = document.getElementById('adminLink');
   function showAuthStatus(message,isError=false){ const old=document.querySelector('.auth-status'); if(old) old.remove(); const el=document.createElement('div'); el.className='auth-status'+(isError?' error':''); el.textContent=message; document.body.appendChild(el); setTimeout(()=>el.remove(),4500); }
-  function updateAccountUI(user){
+  accountBtn.addEventListener('click', ()=>{
+    window.location.href = currentUser ? 'profile.html' : 'auth.html';
+  });
+  onAuthStateChanged(auth, async (user)=>{
     currentUser = user||null;
     if(user){
       const name = user.displayName || user.email?.split('@')[0] || 'Account';
       accountLabel.textContent = name;
+      try{
+        const userDoc = await ensureUserDoc(user);
+        currentRole = userDoc.role || 'user';
+      }catch(e){ console.error(e); currentRole = 'user'; }
+      peopleLink.classList.toggle('hidden', !(currentRole === 'owner' || currentRole === 'screener'));
+      adminLink.classList.toggle('hidden', currentRole !== 'owner');
     } else {
       accountLabel.textContent = 'Sign In';
+      currentRole = 'user';
+      peopleLink.classList.add('hidden');
+      adminLink.classList.add('hidden');
     }
-  }
-  accountBtn.addEventListener('click', ()=>{
-    window.location.href = currentUser ? 'profile.html' : 'auth.html';
   });
-  if(window.firebaseAuthAPI){
-    window.firebaseAuthAPI.onChange(updateAccountUI);
-  } else {
-    window.addEventListener('firebaseAuthReady', ()=> window.firebaseAuthAPI.onChange(updateAccountUI));
-  }
 
   const AIRCRAFT_TYPES = {
     'General Aviation': [
@@ -627,26 +619,6 @@
   const CHECKLIST = ['image_url','aircraft_type','airline','registration','icao'];
 
   function esc(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
-
-  // ---------------- storage ----------------
-  async function fetchAllPhotos(){
-    try{
-      const listRes = await window.storage.get(STORAGE_LIST_KEY, true);
-      const ids = JSON.parse(listRes.value);
-      const out = [];
-      for(const id of ids){
-        try{ const r = await window.storage.get('aa:photo:'+id, true); out.push(JSON.parse(r.value)); }catch(e){}
-      }
-      return out.sort((a,b)=>b.created_date - a.created_date);
-    }catch(e){ return []; }
-  }
-  async function savePhoto(photo){
-    await window.storage.set('aa:photo:'+photo.id, JSON.stringify(photo), true);
-    let ids = [];
-    try{ const r = await window.storage.get(STORAGE_LIST_KEY, true); ids = JSON.parse(r.value); }catch(e){}
-    if(!ids.includes(photo.id)) ids.unshift(photo.id);
-    await window.storage.set(STORAGE_LIST_KEY, JSON.stringify(ids), true);
-  }
 
   // ---------------- routing ----------------
   const views = ['home','browse','upload','detail'];
@@ -771,12 +743,11 @@
     const v = {};
     FIELDS.forEach(([key])=>{ v[key] = document.getElementById('f_'+key).value.trim(); });
     v.notes = document.getElementById('fNotes').value.trim();
-    v.image_url = pendingImage;
     return v;
   }
   function updateFormState(){
     const v = formValues();
-    const ready = !!v.image_url && !!v.aircraft_type;
+    const ready = !!pendingFile && !!v.aircraft_type;
     document.getElementById('submitUploadBtn').disabled = !ready;
     document.getElementById('reqHint').classList.toggle('hidden', ready);
   }
@@ -801,12 +772,12 @@
   function handleFile(file){
     if(!file.type.startsWith('image/')){ fileErr.classList.remove('hidden'); return; }
     fileErr.classList.add('hidden');
+    pendingFile = file;
     const reader = new FileReader();
     reader.onload = ()=>{
-      pendingImage = reader.result;
       dzEmpty.classList.add('hidden');
       dzPreview.classList.remove('hidden');
-      dzPreview.src = pendingImage;
+      dzPreview.src = reader.result;
       dropzone.classList.add('has-img');
       updateFormState();
     };
@@ -814,7 +785,7 @@
   }
 
   function resetUploadForm(){
-    pendingImage = null;
+    pendingFile = null;
     dzEmpty.classList.remove('hidden');
     dzPreview.classList.add('hidden');
     dropzone.classList.remove('has-img');
@@ -827,29 +798,33 @@
   document.getElementById('submitUploadBtn').addEventListener('click', async ()=>{
     if(!currentUser){ window.location.href='auth.html?return=upload'; return; }
     const v = formValues();
-    if(!v.image_url || !v.aircraft_type){
+    if(!pendingFile || !v.aircraft_type){
       fileErr.textContent = 'A photograph and aircraft type are required.';
       fileErr.classList.remove('hidden');
       return;
     }
     const btn = document.getElementById('submitUploadBtn');
     btn.disabled = true;
-    btn.innerHTML = '<span class="spin"></span> Saving…';
-    const photo = Object.assign({}, v, {
-      id: 'r'+Date.now()+Math.random().toString(36).slice(2,7),
-      user_id: currentUser.uid,
-      uploader_name: currentUser.displayName || '',
-      uploader_email: currentUser.email || '',
-      views: 0,
-      created_date: Date.now()
-    });
+    btn.innerHTML = '<span class="spin"></span> Compressing image…';
     try{
-      await savePhoto(photo);
+      const imageUrl = await compressImageToDataURL(pendingFile);
+      btn.innerHTML = '<span class="spin"></span> Saving…';
+      const photoData = Object.assign({}, v, {
+        image_url: imageUrl,
+        user_id: currentUser.uid,
+        uploader_name: currentUser.displayName || '',
+        uploader_email: currentUser.email || '',
+        views: 0,
+        created_date: Date.now()
+      });
+      const id = await createPhoto(photoData);
+      const photo = Object.assign({ id }, photoData);
       photos.unshift(photo);
       resetUploadForm();
       openDetail(photo.id);
     }catch(e){
-      fileErr.textContent = 'Could not save. Try a smaller image.';
+      console.error(e);
+      fileErr.textContent = e.message || 'Could not save. Please try again.';
       fileErr.classList.remove('hidden');
     }
     btn.disabled = false;
@@ -905,7 +880,7 @@
     }
 
     p.views = (p.views||0)+1;
-    try{ await savePhoto(p); }catch(e){}
+    try{ await bumpViews(p.id, p.views); }catch(e){}
   }
 
   function updateFooter(){
